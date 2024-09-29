@@ -1,26 +1,28 @@
 import numpy as np
 import cv2
-import pynput
 import time
 from mss import mss
-from pynput.mouse import Button, Controller
-from pynput.keyboard import Key
+import pyautogui
 
 #Controller is a global var to avoid having to declare a new controller
-def mouse_move(mouse,x,y):
-    mouse.position = (x,y)
+#Will check if this needs use
+def mouse_move(x,y):
+    pyautogui.moveTo(x,y)
 
-def mouse_click(mouse):
-    mouse.click(Button.left,1)
+#def mouse_click():
+#    pyautogui.click()
+def sleep(x):
+    time.sleep(x)
 
-def mouse_drag(mouse,x,y):
-    mouse.press(Button.left)
-    mouse.move = (0,-200)
-    time.sleep(3)
-    mouse.release(Button.left)
+def mouse_move_click(x,y):
+    pyautogui.click(x,y)
 
-def key_press(keyboard,Key):
-    keyboard.press(Key)
+def mouse_drag(x,y):
+    """Drag from coordinates to the specified coords"""
+    pyautogui.dragTo(x,y,1,button='left')
+
+def key_press(Key, presses=1):
+    pyautogui.press(Key,presses)
 
 def capture_screen():
     """Captures the screen using MSS and converts it to a numpy array for CV2"""
@@ -188,40 +190,38 @@ def match_image(template_path ,threshold=0.8):
     
     return found_elements
 
-def click_matching(mouse, image_path):
+def click_matching(image_path,threshold=0.8):
     """Waits for an image to match and click centre of the image"""
-    found = match_image(image_path)
+    found = match_image(image_path,threshold)
 
     #Searches until Image Found if supposed to be found
     if found is None:
         time.sleep(3)
-        click_matching(mouse,image_path)
+        click_matching(image_path,threshold)
 
     else:
         x,y = found[0]
-        mouse_move(mouse,x,y)
-        mouse_click(mouse)
+        mouse_move_click(x,y)
         time.sleep(2)
         
-def press_matching(keyboard,key,image_path):
+def press_matching(key,image_path):
     """Waits for an image to match and presses a key"""
     found = match_image(image_path)
 
     #Searches until Image Found if supposed to be found
     if found is None:
         time.sleep(3)
-        press_matching(keyboard,key,image_path)
+        press_matching(key,image_path)
 
     else:
         time.sleep(2)
         x,y = found[0]
-        key_press(keyboard,key)
+        key_press(key)
         
-        
-        
-
 #dk if i need this for element checking
-def element_exist(img_path):
-    return match_image(img_path)
+def element_exist(img_path,threshold=0.8):
+    return match_image(img_path,threshold)
 
 #320 289
+#1230,420
+#420,580,740

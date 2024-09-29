@@ -1,9 +1,9 @@
 from src import common
 
-def start_mirror(mouse, state):
+def start_mirror(state):
     if common.element_exist("pictures/mirror/entrance/in_progress.png"): #check if MD is in Progress
-        common.click_matching(mouse,"pictures/mirror/entrance/in_progress.png")
-        common.click_matching(mouse, "pictures/mirror/entrance/resume.png")
+        common.click_matching("pictures/mirror/entrance/in_progress.png")
+        common.click_matching("pictures/mirror/entrance/resume.png")
         if common.element_exist("pictures/mirror/entrance/gift_select.png"): #Checks if in gift select
             state = "GIFT_SELECT"
             return state
@@ -13,11 +13,11 @@ def start_mirror(mouse, state):
         state = "NAVIGATING" #If not its still navigating
         return state
 
-    common.click_matching(mouse,"pictures/mirror/entrance/normal.png")
-    common.click_matching(mouse,"pictures/mirror/entrance/enter.png")
+    common.click_matching("pictures/mirror/entrance/normal.png")
+    common.click_matching("pictures/mirror/entrance/enter.png")
     #Checks for Wish of Stars
     if common.element_exist("pictures/mirror/entrance/wish.png"):
-        common.click_matching(mouse,"pictures/mirror/entrance/wish_confirm.png")
+        common.click_matching("pictures/mirror/entrance/wish_confirm.png")
     state = "GIFT_SELECT"
     return state
     
@@ -46,5 +46,18 @@ def gift_choice(gift):
         case "random":
             return "pictures/mirror/gifts/random.png"
         
-def gift_selection(mouse,gift,state):
-    return
+def gift_selection(gift,state,initial_gift_coords):
+    if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
+        common.mouse_move(320,289)
+        common.mouse_drag(320,89)
+
+    common.click_matching(gift,0.9) #click on specified
+    common.mouse_move_click(1230,initial_gift_coords[0])
+    common.mouse_move_click(1230,initial_gift_coords[1])
+    common.click_matching("pictures/mirror/entrance/confirm_gift.png")
+    common.key_press("esc")
+    common.sleep(1)
+    common.key_press("esc")
+
+    state = "SQUAD_SELECT"
+    return state
