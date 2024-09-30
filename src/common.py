@@ -3,18 +3,23 @@ import cv2
 import time
 from mss import mss
 import pyautogui
+import json
 
-#Controller is a global var to avoid having to declare a new controller
-#Will check if this needs use
-def mouse_move(x,y):
-    pyautogui.moveTo(x,y)
 
-#def mouse_click():
-#    pyautogui.click()
 def sleep(x):
+    """Sleep function"""
     time.sleep(x)
 
+def mouse_move(x,y):
+    """Moves the mouse to the X,Y coordinate specified"""
+    pyautogui.moveTo(x,y)
+
+def mouse_click():
+    """Performs a left click on the current position"""
+    pyautogui.click()
+
 def mouse_move_click(x,y):
+    """Moves the mouse to the X,Y coordinate specified and performs a left click"""
     pyautogui.click(x,y)
 
 def mouse_drag(x,y):
@@ -22,6 +27,7 @@ def mouse_drag(x,y):
     pyautogui.dragTo(x,y,1,button='left')
 
 def key_press(Key, presses=1):
+    """Presses the specified key X amount of times"""
     pyautogui.press(Key,presses)
 
 def capture_screen():
@@ -86,7 +92,7 @@ def non_max_suppression_fast(boxes, overlapThresh=0.5):
 
 
 def debug_match_image(template_path ,threshold=0.8):
-    """Same as match_image but draws the rectangle"""
+    """Same as match_image but draws the rectangle around found element"""
     screenshot = capture_screen()
     template = cv2.imread(template_path, cv2.IMREAD_COLOR)
     if template is None:
@@ -142,8 +148,8 @@ def debug_match_image(template_path ,threshold=0.8):
 
     
 def match_image(template_path ,threshold=0.8):
-    screenshot = capture_screen()
     """Finds the image specified and returns the centre coordinates"""
+    screenshot = capture_screen()
     template = cv2.imread(template_path, cv2.IMREAD_COLOR)
     if template is None:
         raise FileNotFoundError(f"Template image '{template_path}' not found.")
@@ -199,6 +205,7 @@ def click_matching(image_path,threshold=0.8):
         time.sleep(3)
         click_matching(image_path,threshold)
 
+    #if found, clicks on the image location
     else:
         x,y = found[0]
         mouse_move_click(x,y)
@@ -213,6 +220,7 @@ def press_matching(key,image_path):
         time.sleep(3)
         press_matching(key,image_path)
 
+    #if found, presses the key specified
     else:
         time.sleep(2)
         x,y = found[0]
@@ -220,8 +228,21 @@ def press_matching(key,image_path):
         
 #dk if i need this for element checking
 def element_exist(img_path,threshold=0.8):
+    """Checks if the element exists if not returns none"""
     return match_image(img_path,threshold)
 
-#320 289
-#1230,420
-#420,580,740
+def squad_order(status):
+    """Returns a list of the image locations depending on the sinner order specified in the json file"""
+    with open("squad_order.json", "r") as f:
+        squads = json.load(f)
+    squad = squads[status]
+    sinner_order = []
+    for i in range(1,13):
+        #sinner_order.append(list(squad.keys())[list(squad.values()).index(i)]) #incase i just want the sinner name?
+        sinner_order.append("pictures/squads/"+list(squad.keys())[list(squad.values()).index(i)]+".png")
+    return sinner_order
+
+#time.sleep(3)
+#print(pyautogui.position())
+#debug_match_image("pictures/general/confirm_black.png")
+#squad_order()

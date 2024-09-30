@@ -1,0 +1,8 @@
+pictures/mirror/packs/f1/forgotten.png
+pictures/mirror/packs/f1/gamblers.png
+pictures/mirror/packs/f1/unloving.png
+pictures/mirror/packs/f1/nagel.png
+pictures/mirror/packs/f1/outcast.png
+pictures/mirror/packs/f1/erosion.png
+pictures/mirror/packs/f1/nest.png
+pictures/mirror/packs/f1/factory.png

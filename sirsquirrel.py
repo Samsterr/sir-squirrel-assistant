@@ -1,22 +1,20 @@
-from src import core, mirror
+from src import core, mirror, mirror_utils
 
-state = ""
-run = 0
-initial_gift_coords = [420,580,740]
+run_count = 0
+num_runs = 1
 
-with open("gift_selection.txt","r") as f:
-    gift = f.read().lower()
+with open("status_selection.txt","r") as f:
+    status = [i.strip().lower() for i in f.readlines()]
 
-#core.refill_enkephalin()
-core.navigate_to_md()
-state = mirror.start_mirror(state)
+status_list = (status * ((num_runs // len(status)) + 1))[:num_runs]
 
-if state == "GIFT_SELECT":
-    if gift == "sinking":
-        initial_gift_coords.pop(0)
-    else:
-        initial_gift_coords.pop(2)
-    gift = mirror.gift_choice(gift)
-    if gift is None:
-        gift = "pictures/mirror/gifts/random.png"
-    state = mirror.gift_selection(gift,state,initial_gift_coords)
+for i in range(num_runs):
+    #core.refill_enkephalin()
+    ##core.navigate_to_md()
+    squad_order = mirror.set_sinner_order(status_list[i])
+
+    while(True):
+        mirror.start_mirror(status_list[i])
+
+
+    
