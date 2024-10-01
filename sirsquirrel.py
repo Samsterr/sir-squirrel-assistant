@@ -12,9 +12,10 @@ for i in range(num_runs):
     #core.refill_enkephalin()
     ##core.navigate_to_md()
     squad_order = mirror.set_sinner_order(status_list[i])
-
-    while(True):
-        mirror.start_mirror(status_list[i])
+    run_complete = 0
+    mirror.market_shopping("bleed")
+    #while(run_complete != 1):
+    #    mirror.start_mirror(status_list[i],squad_order, run_complete)
 
 
     

@@ -244,5 +244,5 @@ def squad_order(status):
 
 #time.sleep(3)
 #print(pyautogui.position())
-#debug_match_image("pictures/general/confirm_black.png")
+debug_match_image("pictures/general/confirm_w.png")
 #squad_order()

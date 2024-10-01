@@ -114,3 +114,26 @@ def reward_choice(status):
             return "pictures/mirror/rewards/pierce_reward.png"
         case "blunt":
             return "pictures/mirror/rewards/blunt_reward.png"
+    
+def market_choice(status):
+    match status:
+        case "sinking":
+            return "pictures/mirror/market/sinking_market.png"
+        case "bleed":
+            return "pictures/mirror/market/bleed_market.png"
+        case "burn":
+            return "pictures/mirror/market/burn_market.png"
+        case "charge":
+            return "pictures/mirror/market/charge_market.png"        
+        case "poise":
+            return "pictures/mirror/market/poise_market.png"
+        case "rupture":
+            return "pictures/mirror/market/rupture_market.png"
+        case "tremor":
+            return "pictures/mirror/market/tremor_market.png"
+        case "slash":
+            return "pictures/mirror/market/slash_market.png"
+        case "pierce":
+            return "pictures/mirror/market/pierce_market.png"
+        case "blunt":
+            return "pictures/mirror/market/blunt_market.png"
