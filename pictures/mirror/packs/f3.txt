@@ -1,0 +1,10 @@
+pictures/mirror/packs/f3/unconfronting.png
+pictures/mirror/packs/f3/miracle.png
+pictures/mirror/packs/f3/judgment.png
+pictures/mirror/packs/f3/seduction.png
+pictures/mirror/packs/f3/subservience.png
+pictures/mirror/packs/f3/piercers.png
+pictures/mirror/packs/f3/tearful.png
+pictures/mirror/packs/f3/crushed.png
+pictures/mirror/packs/f3/flood.png
+pictures/mirror/packs/f3/crawling.png

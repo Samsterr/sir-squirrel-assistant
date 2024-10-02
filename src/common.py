@@ -238,11 +238,9 @@ def squad_order(status):
     squad = squads[status]
     sinner_order = []
     for i in range(1,13):
-        #sinner_order.append(list(squad.keys())[list(squad.values()).index(i)]) #incase i just want the sinner name?
         sinner_order.append("pictures/squads/"+list(squad.keys())[list(squad.values()).index(i)]+".png")
     return sinner_order
 
 #time.sleep(3)
 #print(pyautogui.position())
-debug_match_image("pictures/general/confirm_w.png")
-#squad_order()
+#debug_match_image("pictures/mirror/rewards/blunt_reward.png")

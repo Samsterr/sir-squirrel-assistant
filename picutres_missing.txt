@@ -1,62 +1,24 @@
-#Encounter Reward
-EGO GIFT
-
-#Rest Stop
-Tremor
-Bleed
-Burn
-Poise
-Rupture
-Charge
-Slash
-Blunt
-Pierce
-
-#market
-bleed
-rupture
-pierce
-
 #Rewards
-Poise
-Slash
-Blunt
-Pierce
 Charge
 
-#Packs
-Floor 2
-Floor 3
 
 F3
-Unconfronting
 Falling Flowers
 Dregs of the Manor
-Miracle in District 20
-Slicers & Dicers
 To be cleaved
-piercers & penetrators
 to be pierced
 crushers & breakers
-to be crushed
 emotional repression
-emotional seduction
 emotional indolence
 emotional craving
-emotional flood
-emotional subservience
-emotional judgment
 
 F4
 sinking pang
 deep sigh
 rising power supply
-trickled sanguine blood
 insignificant envy
 vain pride
 devoured gluttony
-treadwheel sloth
 addicting lust
-Yield My Flesh to Claim Their Bones
-Murder on the WARP Express
-repressed wrath
+
+

@@ -1,1 +1,9 @@
 pictures/mirror/packs/f4/dizzying.png
+pictures/mirror/packs/f4/crushing.png
+pictures/mirror/packs/f4/sanguine.png
+pictures/mirror/packs/f4/gloom.png
+pictures/mirror/packs/f4/warp.png
+pictures/mirror/packs/f4/crawling.png
+pictures/mirror/packs/f4/sloth.png
+pictures/mirror/packs/f4/tearful.png
+pictures/mirror/packs/f4/time.png
