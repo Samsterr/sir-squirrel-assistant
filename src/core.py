@@ -1,29 +1,41 @@
 from src import common
 
+
 def refill_enkephalin():
     """Refills enkephalin (Runs from the main menu)"""
     common.click_matching("pictures/general/module.png")
     common.click_matching("pictures/general/right_arrow.png")
     common.click_matching("pictures/general/confirm_w.png")
-    common.click_matching("pictures/general/window.png")
+    common.click_matching("pictures/general/cancel.png")
 
 def navigate_to_md():
     """Navigates to the Mirror Dungeon from the menu"""
-    common.click_matching("pictures/general/window.png")
-    common.click_matching("pictures/general/drive.png")
-    common.click_matching("pictures/general/MD.png")
+    if common.element_exist("pictures/general/MD.png"):
+        common.click_matching("pictures/general/MD.png")
+    else:
+        common.click_matching("pictures/general/window.png")
+        common.click_matching("pictures/general/drive.png")
+        common.click_matching("pictures/general/MD.png")
+
+def md_setup():
+    if common.element_exist("pictures/mirror/general/md.png"):
+        return
+    else:
+        refill_enkephalin()
+        navigate_to_md()
 
 def battle():
     """Handles battles by mashing winrate, also handles skill checks and end of battle loading"""
     battle_finished = 0
     while(battle_finished != 1):
         if common.element_exist("pictures/general/loading.png"): #Checks for loading screen to end the while loop
+            print("LOADING")
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for skill checks prompt then calls skill check function
+            print("SKILL CHECK")
             skill_check()
-        if common.element_exist("pictures/battle/start.png"):
-            common.sleep(1)
+        if common.element_exist("pictures/battle/winrate.png"):
             common.mouse_move_click(1150,640) #handle onscreen prompts example sinking wolf
             common.key_press("p") #win rate keyboard key
             common.key_press("enter") #Battle Start key

@@ -4,11 +4,17 @@ import time
 from mss import mss
 import pyautogui
 import json
+import secrets
 
+def random_choice(list):
+    return secrets.choice(list)
 
 def sleep(x):
     """Sleep function"""
     time.sleep(x)
+
+def mouse_scroll(amount):
+    pyautogui.scroll(amount)
 
 def mouse_move(x,y):
     """Moves the mouse to the X,Y coordinate specified"""
@@ -233,14 +239,29 @@ def element_exist(img_path,threshold=0.8):
 
 def squad_order(status):
     """Returns a list of the image locations depending on the sinner order specified in the json file"""
-    with open("squad_order.json", "r") as f:
+    characters_positions = {
+    "yisang": (435, 375),
+    "faust": (635, 375),
+    "donquixote": (835, 375),
+    "ryoshu": (1035, 375),
+    "meursault": (1235, 375),
+    "honglu": (1435, 375),
+    "heathcliff": (435, 675),
+    "ishmael": (635, 675),
+    "rodion": (835, 675),
+    "sinclair": (1035, 675),
+    "outis": (1235, 675),
+    "gregor": (1435, 675)
+}
+    with open("config/squad_order.json", "r") as f:
         squads = json.load(f)
     squad = squads[status]
+    
     sinner_order = []
     for i in range(1,13):
-        sinner_order.append("pictures/squads/"+list(squad.keys())[list(squad.values()).index(i)]+".png")
+      for name, value in squad.items():
+        if value == i:
+            sinner_name = name
+            if sinner_name in characters_positions:
+                sinner_order.append(characters_positions[sinner_name])  
     return sinner_order
-
-#time.sleep(3)
-#print(pyautogui.position())
-#debug_match_image("pictures/mirror/rewards/blunt_reward.png")

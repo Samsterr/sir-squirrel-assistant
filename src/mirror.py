@@ -25,17 +25,21 @@ def check_loading():
     """Handles the loading screen transitions"""
     common.sleep(2) #Handles fade to black
     if common.element_exist("pictures/general/loading.png"): #checks for loading screen bar
-        common.sleep(4) #handles the remaining loading
+        print("LOADING")
+        common.sleep(5) #handles the remaining loading
 
 def transition_loading():
     """Theres a load that occurs while transitioning to the next floor"""
     common.sleep(5)
 
 def start_mirror(status, squad_order):
+    run_complete = 0
+    win_flag = 0
     """Main Mirror Logic of identifying and running the specified function"""
     if common.element_exist("pictures/mirror/general/in_progress.png"): #check if MD is in Progress
         common.click_matching("pictures/mirror/general/in_progress.png")
         common.click_matching("pictures/general/resume.png")
+        print("CONTINUING RUN")
         check_loading() #Theres loading that occurs if you resume to Pack Selection / Navigating
 
     if common.element_exist("pictures/mirror/general/in_progress.png") is None and common.element_exist("pictures/mirror/general/normal.png"):
@@ -45,57 +49,85 @@ def start_mirror(status, squad_order):
         #Checks for Wish of Stars
         if common.element_exist("pictures/mirror/general/wish.png"):
             common.click_matching("pictures/general/confirm_b.png")
+            print("STARTING RUN")
     
+    if common.element_exist("pictures/general/maint.png"):
+        common.click_matching("pictures/general/confirm_b.png")
+        common.click_matching("pictures/general/no_op.png")
+        common.click_matching("pictures/general/confirm_b.png")
+        print("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP")
+        exit()
+
+    #if common.element_exist("pictures/general/explore_reward.png"):
+        #check bp
+        #if not give up
+
     if common.element_exist("pictures/general/defeat.png"):
+        print("RUN LOST")
         defeat()
         run_complete = 1
         win_flag = 0
         return run_complete,win_flag
     
     if common.element_exist("pictures/general/victory.png"):
+        print("RUN WIN")
         victory()
         run_complete = 1
         win_flag = 1
         return run_complete,win_flag
     
     if common.element_exist("pictures/mirror/general/gift_select.png"): #Checks if in gift select
+        print("GIFT SELECT")
         gift_selection(status)
     
     if common.element_exist("pictures/mirror/general/squad_select.png"): #checks if in Squad select
+        print("INITIAL SQUAD SELECT")
         initial_squad_selection(status)
 
     if common.element_exist("pictures/mirror/general/inpack.png"): #checks if in pack select
+        print("SELECTING PACK")
         refresh_flag = 0
         pack_selection(status,refresh_flag)
     
     if common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
+        print("NAVIGATING")
         navigation()
 
     if common.element_exist("pictures/battle/clear.png"): #checks if in squad select and then proceeds with battle
+        print("SELECTING SQUAD")
         squad_select(squad_order)
-        battle() #need to test if the timing of check_loading interferes with logic
+    
+    if common.element_exist("pictures/battle/winrate.png"):
+        print("STARTING BATTLE")
+        battle()
     
     if common.element_exist("pictures/mirror/general/event.png"):
+        print("EVENT")
         event_choice()
 
     if common.element_exist("pictures/mirror/reststop/fuse.png"): #checks if in rest stop
+        print("REST STOP")
         rest_stop(status)
 
     if common.element_exist("pictures/mirror/market/sell_gifts.png"): #checks if in market
+        print("MARKET")
         market_shopping(status)
 
     if common.element_exist("pictures/mirror/general/reward_select.png"): #checks if in reward select
+        print("REWARD SELECT")
         reward_select(status)
     
     if common.element_exist("pictures/mirror/general/encounter_reward.png"): #checks if in encounter rewards
-        encounter_reward_select(status)
+        print("ENCOUNTER REWARD SELECT")
+        encounter_reward_select()
 
     if common.element_exist("pictures/events/skip.png"): #if hitting the events click skip to determine which is it
+        print("? NODE")
         common.click_matching("pictures/events/skip.png")
-        for i in range(4):
+        for _ in range(4):
             common.mouse_click()
 
-    return 0
+    return win_flag,run_complete
 
 def gift_selection(status):
     """selects the ego gift of the same status, fallsback on random if not unlocked"""
@@ -129,12 +161,12 @@ def initial_squad_selection(squad_status):
         return
     
     #This is to bring us to the first entry of teams
-    for i in range(2):
+    for _ in range(2):
         common.mouse_move(247,621)
         common.mouse_drag(247,1060)
     
     #scrolls through all the squads in steps to look for the name
-    for i in range(4):
+    for _ in range(4):
         if common.element_exist(status,0.9) is None:
             common.mouse_move(247,621)
             common.mouse_drag(247,435)
@@ -166,11 +198,10 @@ def pack_selection(status_effect,refresh_flag):
             pack_selection(status,refresh_flag)
         else:
             found = common.match_image(status,0.75)
-            x,y = found[0]
+            x,y = common.random_choice(found) #seems to prioritse the last item detected so i added this to add some differences
             common.mouse_move(x,493)
             common.mouse_drag(x,y)
-            if floor != "f1":
-                transition_loading() #Floor transitions after pack selection
+            transition_loading() #Floor transitions after pack selection
         
     elif refresh_flag == 1:
         #Skip certain packs appearing that interfere with logic like Bamboo Kim + Skin Prophet
@@ -180,12 +211,12 @@ def pack_selection(status_effect,refresh_flag):
             or common.element_exist("pictures/mirror/packs/f4/yield.png")\
             or common.element_exist("pictures/mirror/packs/f2/violet.png"):
 
-            with open("pictures/mirror/packs/" + floor + ".txt", "r") as f:
+            with open("config/" + floor + ".txt", "r") as f:
                 packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
             for i in packs:
                 if common.element_exist(i):
                     found = common.match_image(i)
-                    x,y = found[0]
+                    x,y = common.random_choice(found)
                     common.mouse_move(x,493)
                     common.mouse_drag(x,900)
                     break
@@ -194,7 +225,7 @@ def pack_selection(status_effect,refresh_flag):
         else:
             #use the ego gift status
             found = common.match_image(status,0.75)
-            x,y = found[0]
+            x,y = common.random_choice(found)
             common.mouse_move(x,493)
             common.mouse_drag(x,y)
             transition_loading()
@@ -205,7 +236,8 @@ def squad_select(squad_order):
     if common.element_exist("pictures/general/confirm_w.png"):
         common.click_matching("pictures/general/confirm_w.png")
     for i in squad_order: #click squad members according to the order in the json file
-        common.click_matching(i)
+        x,y = i
+        common.mouse_move_click(x,y)
     common.key_press("enter")
     check_loading()
 
@@ -307,38 +339,52 @@ def rest_stop(status_effect):
         and len(common.match_image("pictures/mirror/reststop/sanity.png")) < 12):
 
             common.click_matching("pictures/mirror/reststop/heal_sinner.png")
-            common.click_matching("pictures/mirror/reststop/heal_all.png") #This is to check for successful healing
-            common.click_matching("pictures/events/skip.png")
-            for i in range(3):
-             common.mouse_click() #clearing the dialog to check for continue
-            if common.element_exist("pictures/events/continue.png"): #successful heal
-                common.click_matching("pictures/events/continue.png")
-            else:
-                common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
+            if common.element_exist("pictures/mirror/reststop/heal_all.png"): #checks if prompt does enter
+                common.click_matching("pictures/mirror/reststop/heal_all.png") #This is to check for successful healing
+                common.click_matching("pictures/events/skip.png")
+                for i in range(3):
+                    common.mouse_click() #clearing the dialog to check for continue
+                if common.element_exist("pictures/events/continue.png"): #successful heal
+                    common.click_matching("pictures/events/continue.png")
+                else:
+                    common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
 
         common.sleep(1)
         common.click_matching("pictures/mirror/reststop/enhance.png")
-        for s in range(4):
-            if common.element_exist(status):
-                enhance_gifts = common.match_image(status)
-                for i in enhance_gifts:
-                    x,y = i
-                    common.mouse_move_click(x,y)
-                    common.click_matching("pictures/mirror/reststop/power_up.png")
-                    if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost
-                        common.click_matching("pictures/mirror/reststop/cancel.png")
-                        common.click_matching("pictures/mirror/reststop/close.png")
-                        break
-                    else:
-                        if common.element_exist("pictures/mirror/reststop/confirm.png"):
-                            common.click_matching("pictures/mirror/reststop/confirm.png")
-
-            common.mouse_move(1024,407)
-            common.mouse_drag(1024,290)
+        if common.element_exist("pictures/mirror/reststop/scroll_bar.png"): #if scroll bar present scrolls to the start
+            common.click_matching("pictures/mirror/reststop/scroll_bar.png")
+            for i in range(5):
+                common.mouse_scroll(1000)
+        
+        enhance_gifts(status)
 
         common.click_matching("pictures/mirror/reststop/close.png")
         common.click_matching("pictures/mirror/reststop/leave.png")
         common.click_matching("pictures/general/confirm_w.png")
+
+def enhance_gifts(status):
+    """Enhancement gift process"""
+    for _ in range(2):
+        if common.element_exist(status):
+            gifts = common.match_image(status)
+            for i in gifts:
+                x,y = i
+                for _ in range(2): #upgrading twice
+                    common.mouse_move_click(x,y)
+                    if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
+                        break
+                    common.click_matching("pictures/mirror/reststop/power_up.png")
+                    if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
+                        common.click_matching("pictures/mirror/reststop/cancel.png")
+                        common.click_matching("pictures/mirror/reststop/close.png")
+                        return
+                    elif common.element_exist("pictures/mirror/reststop/confirm.png"):
+                        common.click_matching("pictures/mirror/reststop/confirm.png")
+
+        if common.element_exist("pictures/mirror/reststop/scroll_bar.png"):
+            common.click_matching("pictures/mirror/reststop/scroll_bar.png")
+            for k in range(5):
+                common.mouse_scroll(-1000)
 
 def event_choice():
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
@@ -362,7 +408,7 @@ def event_choice():
         common.click_matching("pictures/events/proceed.png")
         if common.element_exist("pictures/events/skip.png"):
             common.click_matching("pictures/events/skip.png")
-            for i in range(4):
+            for _ in range(4):
                 common.mouse_click()
             event_choice()
     
@@ -371,16 +417,22 @@ def event_choice():
         while(not common.element_exist("pictures/events/commence_battle.png")):
             common.mouse_click()
         common.click_matching("pictures/events/commence_battle.png")
-        squad_select()
-        battle()
 
 def victory():
     common.click_matching("pictures/general/beeg_confirm.png")
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/md_claim.png")
-    common.click_matching("pictures/general/confirm_w.png")
-    common.click_matching("pictures/general/confirm_b.png")
-    check_loading()
+    if common.element_exist("pictures/general/confirm_w.png"):
+        print("Rewards Claimed")
+        common.click_matching("pictures/general/confirm_w.png")
+        common.click_matching("pictures/general/confirm_b.png")
+        check_loading()
+    else: #incase not enough modules
+        common.click_matching("pictures/general/to_window.png")
+        common.click_matching("pictures/general/confirm_w.png")
+        check_loading()
+        print("You dont have enough modules to continue")
+        exit() 
 
 def defeat():
     common.click_matching("pictures/general/beeg_confirm.png")

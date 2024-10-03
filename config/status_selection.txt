@@ -1,0 +1,4 @@
+charge
+burn
+rupture
+bleed
