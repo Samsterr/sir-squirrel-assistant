@@ -10,12 +10,9 @@ def refill_enkephalin():
 
 def navigate_to_md():
     """Navigates to the Mirror Dungeon from the menu"""
-    if common.element_exist("pictures/general/MD.png"):
-        common.click_matching("pictures/general/MD.png")
-    else:
-        common.click_matching("pictures/general/window.png")
-        common.click_matching("pictures/general/drive.png")
-        common.click_matching("pictures/general/MD.png")
+    common.click_matching("pictures/general/window.png")
+    common.click_matching("pictures/general/drive.png")
+    common.click_matching("pictures/general/MD.png")
 
 def md_setup():
     if common.element_exist("pictures/mirror/general/md.png"):
@@ -32,16 +29,48 @@ def battle():
             print("LOADING")
             battle_finished = 1
             common.sleep(3)
-        if common.element_exist("pictures/events/skip.png"): #Checks for skill checks prompt then calls skill check function
-            print("SKILL CHECK")
-            skill_check()
+        if common.element_exist("pictures/events/skip.png"): #Checks for skill checks prompt then calls skill check functions
+            result = battle_check()
+            if (result != 0):
+                skill_check()
         if common.element_exist("pictures/battle/winrate.png"):
-            common.mouse_move_click(1150,640) #handle onscreen prompts example sinking wolf
+            common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
             common.key_press("p") #win rate keyboard key
             common.key_press("enter") #Battle Start key
     
+
+def battle_check(): #pink shoes, woppily, doomsdayclock
+    print("SPECIAL BATTLE CHECK")
+    common.click_matching("pictures/events/skip.png")
+    for i in range(8):
+        common.mouse_click()
+
+    if common.element_exist("pictures/battle/investigate.png"):
+        common.click_matching("pictures/battle/investigate.png")
+        common.click_matching("pictures/events/skip.png")
+        while(not common.element_exist("pictures/events/continue.png")):
+            common.mouse_click()
+        common.click_matching("pictures/events/continue.png")
+        return 0
+        
+    if common.element_exist("pictures/battle/NO.png"):
+        for i in range(3):
+            common.click_matching("pictures/battle/NO.png")
+            common.click_matching("pictures/events/skip.png")
+            while(not common.element_exist("pictures/events/proceed.png")):
+                if common.element_exist("pictures/events/continue.png"):
+                    common.click_matching("pictures/events/continue.png")
+                    return 0
+                common.mouse_click()
+            common.click_matching("pictures/events/proceed.png")
+            common.click_matching("pictures/events/skip.png")
+            while(not common.element_exist("pictures/battle/NO.png")):
+                common.mouse_click()
+    return 1
+
 def skill_check(): #need to touch up, very rough
     """Handles Skill checks in the game"""
+    print("SKILL CHECK")
     check_images = [
         "pictures/events/very_high.png",
         "pictures/events/high.png",

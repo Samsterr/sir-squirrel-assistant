@@ -86,8 +86,7 @@ def start_mirror(status, squad_order):
 
     if common.element_exist("pictures/mirror/general/inpack.png"): #checks if in pack select
         print("SELECTING PACK")
-        refresh_flag = 0
-        pack_selection(status,refresh_flag)
+        pack_selection(status)
     
     if common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
         print("NAVIGATING")
@@ -180,55 +179,41 @@ def initial_squad_selection(squad_status):
     check_loading() #Theres a load screen when going from Squad to Pack
 
 
-def pack_selection(status_effect,refresh_flag):
+def pack_selection(status_effect):
     """Prioritises the status gifts for packs if not follows a list"""
     status = mirror_utils.pack_choice(status_effect)
+    if status is None:
+        status = "pictures/mirror/packs/status/poise_pack.png" #Default to poise
     floor = floor_id()
-
-    if refresh_flag == 0:
+    for i in range(2):
         #Skip certain packs appearing that interfere with logic like Bamboo Kim + Skin Prophet
-        if status is None or common.element_exist("pictures/mirror/packs/f4/burning.png")\
-            or common.element_exist("pictures/mirror/packs/f3/slicers.png")\
+        if common.element_exist("pictures/mirror/packs/f2/violet.png")\
+            or common.element_exist("pictures/mirror/packs/f3/crawling.png")\
             or common.element_exist("pictures/mirror/packs/f4/wrath.png")\
+            or common.element_exist("pictures/mirror/packs/f4/burning.png")\
+            or common.element_exist("pictures/mirror/packs/f3/slicers.png")\
             or common.element_exist("pictures/mirror/packs/f4/yield.png")\
-            or common.element_exist("pictures/mirror/packs/f2/violet.png"):
-
-            common.click_matching("pictures/mirror/general/refresh.png")
-            refresh_flag = 1
-            pack_selection(status,refresh_flag)
+            or common.element_exist("pictures/mirror/packs/f4/sloth.png")\
+            or common.element_exist("pictures/mirror/packs/f3/flood.png"):
+            if i == 1:
+                with open("config/" + floor + ".txt", "r") as f:
+                    packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
+                for i in packs:
+                    if common.element_exist(i):
+                        found = common.match_image(i)
+                        x,y = common.random_choice(found)
+                        common.mouse_move(x,493)
+                        common.mouse_drag(x,900)
+                        break
+                transition_loading()
+            else:
+                common.click_matching("pictures/mirror/general/refresh.png")
         else:
             found = common.match_image(status,0.75)
             x,y = common.random_choice(found) #seems to prioritse the last item detected so i added this to add some differences
             common.mouse_move(x,493)
             common.mouse_drag(x,y)
             transition_loading() #Floor transitions after pack selection
-        
-    elif refresh_flag == 1:
-        #Skip certain packs appearing that interfere with logic like Bamboo Kim + Skin Prophet
-        if status is None or common.element_exist("pictures/mirror/packs/f4/burning.png")\
-            or common.element_exist("pictures/mirror/packs/f3/slicers.png")\
-            or common.element_exist("pictures/mirror/packs/f4/wrath.png")\
-            or common.element_exist("pictures/mirror/packs/f4/yield.png")\
-            or common.element_exist("pictures/mirror/packs/f2/violet.png"):
-
-            with open("config/" + floor + ".txt", "r") as f:
-                packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
-            for i in packs:
-                if common.element_exist(i):
-                    found = common.match_image(i)
-                    x,y = common.random_choice(found)
-                    common.mouse_move(x,493)
-                    common.mouse_drag(x,900)
-                    break
-            transition_loading()
-
-        else:
-            #use the ego gift status
-            found = common.match_image(status,0.75)
-            x,y = common.random_choice(found)
-            common.mouse_move(x,493)
-            common.mouse_drag(x,y)
-            transition_loading()
         
 def squad_select(squad_order):
     """selects sinners in squad order"""
@@ -244,7 +229,9 @@ def squad_select(squad_order):
 def reward_select(status):
     """Selecting EGO Gift rewards"""
     status = mirror_utils.reward_choice(status)
-    if status is None or common.element_exist(status) is None:
+    if status is None:
+        status = "pictures/mirror/rewards/poise_reward.png"
+    if common.element_exist(status) is None:
         common.click_matching("pictures/mirror/general/reward_select.png")
     else:
         common.click_matching(status)
@@ -282,6 +269,7 @@ def navigation():
     #Find which node is the traversable one
         for i in range(3):
             common.mouse_move_click(1083,node_y[i])
+            common.sleep(1)
             if common.element_exist("pictures/mirror/general/md_enter.png"):
                 common.click_matching("pictures/mirror/general/md_enter.png")
 
@@ -290,6 +278,8 @@ def market_shopping(status_effect):
     #If everyone not at 45 sanity then heal
     refresh_flag = 0
     status = mirror_utils.market_choice(status_effect)
+    if status is None:
+        status = "pictures/mirror/market/poise_market.png"
 
     #Check for insufficient cost to exit
     if common.element_exist("pictures/mirror/market/small_not.png"):
@@ -307,22 +297,18 @@ def market_shopping(status_effect):
                     common.mouse_click()
                 common.click_matching("pictures/events/continue.png")
 
-        if status is not None:
-            while(refresh_flag != 2):
-                if common.element_exist(status):
-                    enhance_gifts = common.match_image(status)
-                    for i in enhance_gifts:
-                        x,y = i
-                        common.mouse_move_click(x,y)
-                        if common.element_exist("pictures/mirror/market/purchase.png"): #purchase button will appear if purchasable
-                            common.click_matching("pictures/mirror/market/purchase.png")
-                            common.click_matching("pictures/general/confirm_b.png")
-                    common.click_matching("pictures/mirror/market/refresh.png")
-                    refresh_flag += 1
-
-                else:
-                    common.click_matching("pictures/mirror/market/refresh.png")
-                    refresh_flag += 1
+        for _ in range(2):
+            if common.element_exist(status):
+                enhance_gifts = common.match_image(status)
+                for i in enhance_gifts:
+                    x,y = i
+                    common.mouse_move_click(x,y)
+                    if common.element_exist("pictures/mirror/market/purchase.png"): #purchase button will appear if purchasable
+                        common.click_matching("pictures/mirror/market/purchase.png")
+                        common.click_matching("pictures/general/confirm_b.png")
+                common.click_matching("pictures/mirror/market/refresh.png")
+            else:
+                common.click_matching("pictures/mirror/market/refresh.png")
 
         common.click_matching("pictures/mirror/market/leave.png")
         common.click_matching("pictures/general/confirm_w.png")
@@ -335,6 +321,8 @@ def rest_stop(status_effect):
 
     else:
         status = mirror_utils.enhance_gift_choice(status_effect)
+        if status is None:
+            status = "pictures/mirror/reststop/poise_enhance.png"
         if not common.element_exist("pictures/mirror/reststop/sanity.png") or (common.element_exist("pictures/mirror/reststop/sanity.png")\
         and len(common.match_image("pictures/mirror/reststop/sanity.png")) < 12):
 
@@ -349,7 +337,7 @@ def rest_stop(status_effect):
                 else:
                     common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
 
-        common.sleep(1)
+        #common.sleep(1)
         common.click_matching("pictures/mirror/reststop/enhance.png")
         if common.element_exist("pictures/mirror/reststop/scroll_bar.png"): #if scroll bar present scrolls to the start
             common.click_matching("pictures/mirror/reststop/scroll_bar.png")
@@ -376,7 +364,7 @@ def enhance_gifts(status):
                     common.click_matching("pictures/mirror/reststop/power_up.png")
                     if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
                         common.click_matching("pictures/mirror/reststop/cancel.png")
-                        common.click_matching("pictures/mirror/reststop/close.png")
+                        common.mouse_click()
                         return
                     elif common.element_exist("pictures/mirror/reststop/confirm.png"):
                         common.click_matching("pictures/mirror/reststop/confirm.png")
