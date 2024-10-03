@@ -210,10 +210,24 @@ def pack_selection(status_effect):
                 common.click_matching("pictures/mirror/general/refresh.png")
         else:
             found = common.match_image(status,0.75)
-            x,y = common.random_choice(found) #seems to prioritse the last item detected so i added this to add some differences
-            common.mouse_move(x,493)
-            common.mouse_drag(x,y)
-            transition_loading() #Floor transitions after pack selection
+            if found is None and i==1:
+                with open("config/" + floor + ".txt", "r") as f:
+                    packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
+                for i in packs:
+                    if common.element_exist(i):
+                        found = common.match_image(i)
+                        x,y = common.random_choice(found)
+                        common.mouse_move(x,493)
+                        common.mouse_drag(x,900)
+                        break
+                transition_loading()
+            if found is None and i == 0:
+                common.click_matching("pictures/mirror/general/refresh.png")
+            else:
+                x,y = common.random_choice(found) #seems to prioritse the last item detected so i added this to add some differences
+                common.mouse_move(x,493)
+                common.mouse_drag(x,y)
+                transition_loading() #Floor transitions after pack selection
         
 def squad_select(squad_order):
     """selects sinners in squad order"""
