@@ -1,4 +1,6 @@
+bleed
+tremor
+sinking
 charge
 burn
 rupture
-bleed

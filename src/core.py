@@ -1,8 +1,11 @@
 from src import common
+import logging
 
+logger = logging.getLogger(__name__)
 
 def refill_enkephalin():
-    """Refills enkephalin (Runs from the main menu)"""
+    """Converts to Module (Runs from the main menu)"""
+    logger.info("Converting Enkephalin to Modules")
     common.click_matching("pictures/general/module.png")
     common.click_matching("pictures/general/right_arrow.png")
     common.click_matching("pictures/general/confirm_w.png")
@@ -10,6 +13,7 @@ def refill_enkephalin():
 
 def navigate_to_md():
     """Navigates to the Mirror Dungeon from the menu"""
+    logger.info("Navigating to Mirror Dungeon")
     common.click_matching("pictures/general/window.png")
     common.click_matching("pictures/general/drive.png")
     common.click_matching("pictures/general/MD.png")
@@ -23,13 +27,14 @@ def md_setup():
 
 def battle():
     """Handles battles by mashing winrate, also handles skill checks and end of battle loading"""
+    logger.info("Starting Battle")
     battle_finished = 0
     while(battle_finished != 1):
         if common.element_exist("pictures/general/loading.png"): #Checks for loading screen to end the while loop
-            print("LOADING")
+            logger.info("Loading")
             battle_finished = 1
             common.sleep(3)
-        if common.element_exist("pictures/events/skip.png"): #Checks for skill checks prompt then calls skill check functions
+        if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
             result = battle_check()
             if (result != 0):
                 skill_check()
@@ -39,21 +44,16 @@ def battle():
             common.key_press("enter") #Battle Start key
     
 
-def battle_check(): #pink shoes, woppily, doomsdayclock
-    print("SPECIAL BATTLE CHECK")
-    common.click_matching("pictures/events/skip.png")
-    for i in range(8):
-        common.mouse_click()
+def battle_check(): #pink shoes, woppily, doomsday clock
+    logger.info("Battle Event Check")
+    common.click_skip(8)
 
-    if common.element_exist("pictures/battle/investigate.png"):
+    if common.element_exist("pictures/battle/investigate.png"): #Woppily
         common.click_matching("pictures/battle/investigate.png")
-        common.click_matching("pictures/events/skip.png")
-        while(not common.element_exist("pictures/events/continue.png")):
-            common.mouse_click()
-        common.click_matching("pictures/events/continue.png")
+        common.wait_skip("pictures/events/continue.png")
         return 0
         
-    if common.element_exist("pictures/battle/NO.png"):
+    if common.element_exist("pictures/battle/NO.png"): #Woppily
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
             common.click_matching("pictures/events/skip.png")
@@ -66,11 +66,29 @@ def battle_check(): #pink shoes, woppily, doomsdayclock
             common.click_matching("pictures/events/skip.png")
             while(not common.element_exist("pictures/battle/NO.png")):
                 common.mouse_click()
+
+    if common.element_exist("pictures/battle/refuse.png"): # Pink Shoes
+        common.click_matching("pictures/battle/refuse.png")
+        common.wait_skip("pictures/events/proceed.png")
+        skill_check()
+        return 0
+    
+    if common.element_exist("pictures/battle/offer_clay.png"): #Doomsday Clock
+        found = common.match_image("pictures/battle/offer_clay.png")
+        x,y = found[0]
+        if common.luminence(x,y+15) == 26: 
+            common.click_matching("pictures/battle/offer_sinner.png")
+            common.wait_skip("pictures/events/proceed.png")
+            skill_check()
+        else:
+            common.click_matching("pictures/battle/offer_clay.png")
+            common.wait_skip("pictures/events/continue.png")
+        return 0
     return 1
 
-def skill_check(): #need to touch up, very rough
+def skill_check():
     """Handles Skill checks in the game"""
-    print("SKILL CHECK")
+    logger.info("Skill Check")
     check_images = [
         "pictures/events/very_high.png",
         "pictures/events/high.png",
@@ -79,27 +97,16 @@ def skill_check(): #need to touch up, very rough
         "pictures/events/very_low.png"
         ] #Images for the skill check difficulties
     
-    #common.click_matching("pictures/events/proceed.png")
-    common.click_matching("pictures/events/skip.png") #mash skip to get the ui to show
-    while(not common.element_exist("pictures/events/skill_check.png")):
-        common.mouse_click()
-
-    common.sleep(1)
+    common.wait_skip("pictures/events/skill_check.png")
+    common.sleep(1) #for the full list to render
     for i in check_images: #Choose the highest to pass check
         if common.element_exist(i,0.9):
             common.click_matching(i)
-            common.sleep(1)
             break
 
     common.click_matching("pictures/events/commence.png")
-    common.sleep(5) #Waits for coin tosses
-    common.click_matching("pictures/events/skip.png")
-    while(not common.element_exist("pictures/events/continue.png")):
-        #common.click_matching("pictures/events/skip.png")
-        common.mouse_click()
-    common.click_matching("pictures/events/continue.png")
-    common.sleep(1)
+    common.sleep(4) #Waits for coin tosses
+    common.wait_skip("pictures/events/continue.png")
+    common.sleep(1) #in the event of ego gifts
     if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
         common.key_press("enter")
-        #common.click_matching("pictures/general/confirm_b.png")
-    #Need to consider gaining ego gift here

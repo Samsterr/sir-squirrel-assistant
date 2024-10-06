@@ -152,7 +152,6 @@ def debug_match_image(template_path ,threshold=0.8):
     
     return found_elements
 
-    
 def match_image(template_path ,threshold=0.8):
     """Finds the image specified and returns the centre coordinates"""
     screenshot = capture_screen()
@@ -202,20 +201,30 @@ def match_image(template_path ,threshold=0.8):
     
     return found_elements
 
-def click_matching(image_path,threshold=0.8):
+def click_skip(times):
+    """Click Skip the amount of time specified"""
+    click_matching("pictures/events/skip.png")
+    for i in range(times):
+        mouse_click()
+
+def wait_skip(img_path, threshold=0.8):
+    click_matching("pictures/events/skip.png")
+    while(not element_exist(img_path,threshold)):
+        mouse_click()
+    click_matching(img_path,threshold)
+
+def wait_click(image_path,threshold=0.8):
     """Waits for an image to match and click centre of the image"""
-    found = match_image(image_path,threshold)
+    while(not match_image(image_path,threshold)):
+        sleep(1)
+    click_matching(image_path,threshold)
 
-    #Searches until Image Found if supposed to be found
-    if found is None:
-        time.sleep(3)
-        click_matching(image_path,threshold)
-
-    #if found, clicks on the image location
-    else:
+def click_matching(image_path,threshold=0.8):
+    if element_exist(image_path):
+        found = match_image(image_path,threshold)
         x,y = found[0]
         mouse_move_click(x,y)
-        time.sleep(2)
+        time.sleep(1)
         
 def press_matching(key,image_path):
     """Waits for an image to match and presses a key"""
@@ -265,3 +274,10 @@ def squad_order(status):
             if sinner_name in characters_positions:
                 sinner_order.append(characters_positions[sinner_name])  
     return sinner_order
+
+def luminence(x,y):
+    """Get Luminence of the pixel and return overall coefficient"""
+    screenshot = capture_screen()
+    pixel_image = screenshot[y, x]
+    coeff = (pixel_image[0] + pixel_image[1] + pixel_image[2]) / 3
+    return coeff
