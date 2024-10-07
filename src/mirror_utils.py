@@ -137,3 +137,26 @@ def market_choice(status):
             return "pictures/mirror/market/pierce_market.png"
         case "blunt":
             return "pictures/mirror/market/blunt_market.png"
+        
+def enhance_shift(status):
+    match status:
+        case "sinking":
+            return (7,-26)
+        case "bleed":
+            return (8,-26)
+        case "burn":
+            return (10,-37)
+        case "charge":
+            return (9,-32)       
+        case "poise":
+            return (9,-30)
+        case "rupture":
+            return (9,-31)
+        case "tremor":
+            return (11,-33)
+        case "slash":
+            return (13,-35)
+        case "pierce":
+            return (13,-35)
+        case "blunt":
+            return (8,-34)

@@ -47,7 +47,7 @@ def battle():
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
     common.click_skip(8)
-
+    common.sleep(0.5) #short sleep to see if it fixes the issue
     if common.element_exist("pictures/battle/investigate.png"): #Woppily
         common.click_matching("pictures/battle/investigate.png")
         common.wait_skip("pictures/events/continue.png")
@@ -73,17 +73,23 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         skill_check()
         return 0
     
-    if common.element_exist("pictures/battle/offer_clay.png"): #Doomsday Clock
+    if common.element_exist("pictures/battle/offer_sinner.png"): #Doomsday Clock
         found = common.match_image("pictures/battle/offer_clay.png")
-        x,y = found[0]
-        if common.luminence(x,y+15) == 26: 
-            common.click_matching("pictures/battle/offer_sinner.png")
-            common.wait_skip("pictures/events/proceed.png")
-            skill_check()
-        else:
-            common.click_matching("pictures/battle/offer_clay.png")
-            common.wait_skip("pictures/events/continue.png")
+        if found:
+            x,y = found[0]
+            logger.debug("Found Clay Option")
+            if common.luminence(x,y+15) != 26 : 
+                logger.debug("Offer cLAY USED")
+                common.click_matching("pictures/battle/offer_clay.png")
+                common.wait_skip("pictures/events/continue.png")
+                return 0
+
+        logger.debug("Using Sinner")
+        common.click_matching("pictures/battle/offer_sinner.png")
+        common.wait_skip("pictures/events/proceed.png")
+        skill_check()
         return 0
+        
     return 1
 
 def skill_check():
@@ -106,7 +112,11 @@ def skill_check():
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    common.wait_skip("pictures/events/continue.png")
+    common.click_skip(10)
+    if common.element_exist("pictures/events/continue.png"):
+        common.click_matching("pictures/events/continue.png")
+    if common.element_exist("pictures/events/proceed.png"):
+        common.click_matching("pictures/events/proceed.png")
     common.sleep(1) #in the event of ego gifts
     if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
         common.key_press("enter")

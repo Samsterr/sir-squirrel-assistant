@@ -30,7 +30,6 @@ def main():
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Log format
     handlers=[
         logging.FileHandler("squirrel.log"),  # Output to a file
-        #logging.StreamHandler()  # Output to console
     ])
     logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser()

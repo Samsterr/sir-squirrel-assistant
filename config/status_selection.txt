@@ -1,6 +1,10 @@
-bleed
-tremor
-sinking
-charge
-burn
 rupture
+blunt
+tremor
+slash
+charge
+poise
+pierce
+sinking
+bleed
+burns
