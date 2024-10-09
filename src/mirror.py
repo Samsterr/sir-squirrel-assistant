@@ -62,18 +62,18 @@ def start_mirror(status, squad_order):
         logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
         exit()
 
-    if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
-        if common.element_exist("pictures/mirror/general/clear.png"):
-            common.click_matching("pictures/general/md_claim.png")
-            if common.element_exist("pictures/general/confirm_w.png"):
-                logger.info("Rewards Claimed")
-                common.click_matching("pictures/general/confirm_w.png")
-                common.click_matching("pictures/general/confirm_b.png")
-                common.click_matching("pictures/general/cancel.png")
-        else:
-            common.click_matching("pictures/general/give_up.png")
-            common.click_matching("pictures/general/confirm_w.png")
-            common.click_matching("pictures/general/cancel.png")
+    #if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
+    #    if common.element_exist("pictures/mirror/general/clear.png"):
+    #        common.click_matching("pictures/general/md_claim.png")
+    #        if common.element_exist("pictures/general/confirm_w.png"):
+    #            logger.info("Rewards Claimed")
+    #            common.click_matching("pictures/general/confirm_w.png")
+    #            common.click_matching("pictures/general/confirm_b.png")
+    #            common.click_matching("pictures/general/cancel.png")
+    #    else:
+    #        common.click_matching("pictures/general/give_up.png")
+    #        common.click_matching("pictures/general/confirm_w.png")
+    #        common.click_matching("pictures/general/cancel.png")
 
     if common.element_exist("pictures/general/defeat.png"):
         defeat()
