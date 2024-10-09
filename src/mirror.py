@@ -249,13 +249,12 @@ def exclusion_detection(floor):
 def squad_select(squad_order):
     """selects sinners in squad order"""
     logger.info("Selecting Squad for Battle")
-    if not common.element_exist("pictures/squads/66.png"):
-        common.click_matching("pictures/battle/clear.png")
-        if common.element_exist("pictures/general/confirm_w.png"):
-            common.click_matching("pictures/general/confirm_w.png")
-        for i in squad_order: #click squad members according to the order in the json file
-            x,y = i
-            common.mouse_move_click(x,y)
+    common.click_matching("pictures/battle/clear.png")
+    if common.element_exist("pictures/general/confirm_w.png"):
+        common.click_matching("pictures/general/confirm_w.png")
+    for i in squad_order: #click squad members according to the order in the json file
+        x,y = i
+        common.mouse_move_click(x,y)
 
     common.key_press("enter")
     check_loading()
