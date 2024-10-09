@@ -22,6 +22,8 @@ def wuthering_run(num_runs,logger):
             win_count += 1
         else:
             lose_count += 1
+        run_count += 1
+        
     logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
 
 def main():

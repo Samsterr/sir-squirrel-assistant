@@ -62,9 +62,18 @@ def start_mirror(status, squad_order):
         logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
         exit()
 
-    #if common.element_exist("pictures/general/explore_reward.png"):
-        #check bp
-        #if not give up
+    if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
+        if common.element_exist("pictures/mirror/general/clear.png"):
+            common.click_matching("pictures/general/md_claim.png")
+            if common.element_exist("pictures/general/confirm_w.png"):
+                logger.info("Rewards Claimed")
+                common.click_matching("pictures/general/confirm_w.png")
+                common.click_matching("pictures/general/confirm_b.png")
+                common.click_matching("pictures/general/cancel.png")
+        else:
+            common.click_matching("pictures/general/give_up.png")
+            common.click_matching("pictures/general/confirm_w.png")
+            common.click_matching("pictures/general/cancel.png")
 
     if common.element_exist("pictures/general/defeat.png"):
         defeat()
@@ -126,9 +135,7 @@ def gift_selection(status):
     else:
            initial_gift_coords.pop(2)
 
-    gift = mirror_utils.gift_choice(status)
-    if gift is None: 
-        gift = "pictures/mirror/gifts/random.png" #Use Random in the event statuses have not been unlocked
+    gift = mirror_utils.gift_choice(status) or "pictures/mirror/gifts/random.png"
 
     if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
         common.mouse_move(320,289)
@@ -174,9 +181,7 @@ def initial_squad_selection(squad_status):
 def pack_selection(status_effect):
     """Prioritises the status gifts for packs if not follows a list"""
     logger.info("Selecting Pack")
-    status = mirror_utils.pack_choice(status_effect)
-    if status is None:
-        status = "pictures/mirror/packs/status/poise_pack.png" #Default to poise
+    status = mirror_utils.pack_choice(status_effect) or "pictures/mirror/packs/status/poise_pack.png"
     floor = floor_id()
     logger.debug("Current Floor "+ floor)
     found = common.match_image("pictures/mirror/general/refresh.png")
@@ -188,7 +193,7 @@ def pack_selection(status_effect):
         logger.debug("PACKS: pack exclusion detected, refreshing")
         common.click_matching("pictures/mirror/general/refresh.png")
         common.mouse_move(200,200)
-        pack_selection(status_effect)
+        return pack_selection(status_effect)
 
     if exclusion_detection(floor) and refresh_flag: #if pack exclusion detected and refreshed
         logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
@@ -196,27 +201,26 @@ def pack_selection(status_effect):
         
     if common.element_exist(status, 0.75) and not exclusion_detection(floor): #if pack exclusion absent and status exists
         logger.debug("pack exclusion not detected, choosing from status")
-        return choose_pack(status)
+        return choose_pack(status, 0.75)
     
     if common.element_exist(status,0.75) and exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
         logger.debug("PACKS: pack exclusion detected, status detected, refreshing")
         common.click_matching("pictures/mirror/general/refresh.png")
-        pack_selection(status_effect)
+        return pack_selection(status_effect)
 
-    else:
-        logger.debug("PACKS: using pack list")
-        return pack_list(floor)
+    logger.debug("PACKS: using pack list")
+    return pack_list(floor)
 
-def pack_list(floor):
+def pack_list(floor, threshold=0.8):
     with open("config/" + floor + ".txt", "r") as f:
         packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
     for i in packs:
-        if common.element_exist(i,0.75):
-            return choose_pack(i)
+        if common.element_exist(i,threshold):
+            return choose_pack(i, threshold)
 
-def choose_pack(pack_image):
-    found = common.match_image(pack_image, 0.75)
-    x,y = found[0]
+def choose_pack(pack_image, threshold=0.8):
+    found = common.match_image(pack_image,threshold)
+    x,y = common.random_choice(found)
     common.mouse_move(x,493)
     common.mouse_drag(x,900)
     transition_loading()
@@ -239,21 +243,20 @@ def exclusion_detection(floor):
                    "pictures/mirror/packs/f4/burning.png",
                    "pictures/mirror/packs/f4/yield.png",
                    "pictures/mirror/packs/f4/sloth.png"]
-    for i in exclusion:
-        if common.element_exist(i, 0.75):
-            detected = 1
-            return detected
-    return detected
-    
+    detected = any(common.element_exist(i, 0.75) for i in exclusion)
+    return int(detected)
+
 def squad_select(squad_order):
     """selects sinners in squad order"""
     logger.info("Selecting Squad for Battle")
-    common.click_matching("pictures/battle/clear.png")
-    if common.element_exist("pictures/general/confirm_w.png"):
-        common.click_matching("pictures/general/confirm_w.png")
-    for i in squad_order: #click squad members according to the order in the json file
-        x,y = i
-        common.mouse_move_click(x,y)
+    if not common.element_exist("pictures/squads/66.png"):
+        common.click_matching("pictures/battle/clear.png")
+        if common.element_exist("pictures/general/confirm_w.png"):
+            common.click_matching("pictures/general/confirm_w.png")
+        for i in squad_order: #click squad members according to the order in the json file
+            x,y = i
+            common.mouse_move_click(x,y)
+
     common.key_press("enter")
     check_loading()
 
@@ -264,11 +267,14 @@ def reward_select(status):
     if status_effect is None:
         status_effect = "pictures/mirror/rewards/poise_reward.png"
     if common.element_exist(status_effect) is None:
-        common.click_matching("pictures/mirror/general/reward_select.png")
+        found = common.match_image("pictures/mirror/general/reward_select.png")
+        x,y = common.random_choice(found)
+        common.mouse_click(x,y)
     else:
         common.click_matching(status_effect)
     
     common.click_matching("pictures/mirror/general/confirm_gift.png")
+    common.sleep(1)
     common.key_press("enter")
 
 def encounter_reward_select():
@@ -299,7 +305,7 @@ def navigation():
     #Checks incase continuing quitted out MD
     common.click_matching("pictures/mirror/general/danteh.png")
     if common.element_exist("pictures/mirror/general/md_enter.png"):
-        common.click_matching("pictures/mirror/general/md_enter.png")
+        common.key_press("enter")
     else:
     #Find which node is the traversable one
         for i in range(3):
@@ -335,8 +341,12 @@ def market_shopping(status_effect):
             common.wait_skip("pictures/events/continue.png")
 
         for _ in range(3):
+            market_gifts = []
+            if common.element_exist("pictures/mirror/market/wordless.png"):
+                market_gifts += common.match_image("pictures/mirror/market/wordless.png") #keywordless gifts
             if common.element_exist(status):
-                market_gifts = common.match_image(status)
+                market_gifts += common.match_image(status)
+            if len(market_gifts):
                 for i in market_gifts:
                     x,y = i
                     logger.debug(common.luminence(x+31,y+1))
@@ -350,14 +360,15 @@ def market_shopping(status_effect):
                         logger.debug("MARKET: PURCHASED EGO GIFT")
                         common.click_matching("pictures/mirror/market/purchase.png")
                         common.click_matching("pictures/general/confirm_b.png")
-                if common.element_exist("pictures/mirror/market/small_not.png"):
-                    break
-                
+
+            if common.element_exist("pictures/mirror/market/small_not.png"):
+                break
+
             if _ != 2:
                 common.click_matching("pictures/mirror/market/refresh.png")
 
         common.click_matching("pictures/mirror/market/leave.png")
-        common.click_matching("pictures/general/confirm_w.png")
+        common.click_matching("pictures/general/confirm_w.png")    
 
 def rest_stop(status_effect):
     #check for insufficient cost
@@ -394,28 +405,24 @@ def rest_stop(status_effect):
             common.click_matching("pictures/mirror/reststop/scroll_bar.png")
             for i in range(5):
                 common.mouse_scroll(1000)
-        shift_x, shift_y = mirror_utils.enhance_shift(status_effect)
-        if shift_x is None or shift_y is None:
-            shift_x = 9
-            shift_y = -30
-        enhance_gifts(status, shift_x, shift_y)
+        enhance_gifts(status,status_effect)
         if common.element_exist("pictures/mirror/reststop/close.png"):
             common.click_matching("pictures/mirror/reststop/close.png")
         common.click_matching("pictures/mirror/reststop/leave.png")
         common.click_matching("pictures/general/confirm_w.png")
 
-def enhance_gifts(status, shift_x, shift_y):
+def enhance_gifts(status, status_effect):
     """Enhancement gift process"""
     for _ in range(2):
         if common.element_exist(status):
+            shift_x, shift_y = mirror_utils.enhance_shift(status_effect) or (9, -30)
             gifts = common.match_image(status)
-            for i in gifts:
-                x,y = i
+            for x,y in gifts:
                 logger.debug(common.luminence(x+shift_x,y+shift_y))
                 if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
                     continue
+                common.mouse_move_click(x,y)
                 for _ in range(2): #upgrading twice
-                    common.mouse_move_click(x,y)
                     if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
                         break
                     common.click_matching("pictures/mirror/reststop/power_up.png")
@@ -426,7 +433,29 @@ def enhance_gifts(status, shift_x, shift_y):
                         common.mouse_click()
                         return
                     elif common.element_exist("pictures/mirror/reststop/confirm.png"):
-                        logger.debug("REST STOP: EGO GIFT UPGRADED")
+                        logger.debug("REST STOP: EGO STATUS GIFT UPGRADED")
+                        common.click_matching("pictures/mirror/reststop/confirm.png")
+                        
+        if common.element_exist("pictures/mirror/reststop/wordless_enhance.png"):
+            shift_x, shift_y = mirror_utils.enhance_shift("wordless")
+            gifts = common.match_image(status)
+            for x,y in gifts:
+                logger.debug(common.luminence(x+shift_x,y+shift_y))
+                if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
+                    continue
+                common.mouse_move_click(x,y)
+                for _ in range(2): #upgrading twice
+                    if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
+                        break
+                    common.click_matching("pictures/mirror/reststop/power_up.png")
+                    if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
+                        logger.debug("REST STOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
+                        common.click_matching("pictures/mirror/reststop/cancel.png")
+                        common.sleep(1)
+                        common.mouse_click()
+                        return
+                    elif common.element_exist("pictures/mirror/reststop/confirm.png"):
+                        logger.debug("REST STOP: KEYWORDLESS EGO GIFT UPGRADED")
                         common.click_matching("pictures/mirror/reststop/confirm.png")
 
         if common.element_exist("pictures/mirror/reststop/scroll_bar.png"):

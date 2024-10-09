@@ -160,3 +160,5 @@ def enhance_shift(status):
             return (13,-35)
         case "blunt":
             return (8,-34)
+        case "wordless":
+            return (6,-38)

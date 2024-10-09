@@ -35,8 +35,7 @@ def battle():
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
-            result = battle_check()
-            if (result != 0):
+            if battle_check() != 0:
                 skill_check()
         if common.element_exist("pictures/battle/winrate.png"):
             common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
@@ -113,10 +112,12 @@ def skill_check():
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
     common.click_skip(10)
+
     if common.element_exist("pictures/events/continue.png"):
         common.click_matching("pictures/events/continue.png")
     if common.element_exist("pictures/events/proceed.png"):
         common.click_matching("pictures/events/proceed.png")
+        
     common.sleep(1) #in the event of ego gifts
     if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
         common.key_press("enter")
