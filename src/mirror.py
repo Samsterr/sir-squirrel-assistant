@@ -269,7 +269,7 @@ def reward_select(status):
     if common.element_exist(status_effect) is None:
         found = common.match_image("pictures/mirror/general/reward_select.png")
         x,y = common.random_choice(found)
-        common.mouse_click(x,y)
+        common.mouse_move_click(x,y)
     else:
         common.click_matching(status_effect)
     

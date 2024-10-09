@@ -337,5 +337,3 @@ def scale_match_image(template_path, threshold=0.8):
 
     # Return the list of center coordinates of all found elements or None if no elements found
     return found_elements if found_elements else None
-
-debug_match_image("pictures/general/enter.png")
