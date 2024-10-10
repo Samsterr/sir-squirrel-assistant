@@ -281,3 +281,59 @@ def luminence(x,y):
     pixel_image = screenshot[y, x]
     coeff = (pixel_image[0] + pixel_image[1] + pixel_image[2]) / 3
     return coeff
+
+def scale_match_image(template_path, threshold=0.8):
+    """Finds the image specified and returns the center coordinates using multi-scale template matching."""
+    screenshot = capture_screen()
+    template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+    if template is None:
+        raise FileNotFoundError(f"Template image '{template_path}' not found.")
+    
+    template_height, template_width = template.shape[:2]
+
+    # Parameters for multi-scale template matching
+    scale_start = 0.5  # Start with a scale of 50% of the original template size
+    scale_end = 1.5    # Go up to 150% of the original template size
+    scale_step = 0.1   # Scale step size
+
+    all_boxes = []
+
+    for scale in np.arange(scale_start, scale_end, scale_step):
+        # Resize the template image
+        resized_template = cv2.resize(template, (int(template_width * scale), int(template_height * scale)))
+        resized_height, resized_width = resized_template.shape[:2]
+
+        # Perform template matching on the resized template
+        result = cv2.matchTemplate(screenshot, resized_template, cv2.TM_CCOEFF_NORMED)
+
+        # Get locations where the match confidence exceeds the threshold
+        locations = np.where(result >= threshold)
+
+        # Loop through all the matching locations
+        for pt in zip(*locations[::-1]):  # Switch columns and rows
+            top_left = pt
+            bottom_right = (top_left[0] + resized_width, top_left[1] + resized_height)
+            all_boxes.append([top_left[0], top_left[1], bottom_right[0], bottom_right[1]])
+
+    if len(all_boxes) == 0:
+        return None  # No matches found
+
+    all_boxes = np.array(all_boxes)
+
+    # Apply non-maximum suppression to remove overlapping boxes
+    filtered_boxes = non_max_suppression_fast(all_boxes)
+
+    # List to hold the center coordinates of all filtered elements
+    found_elements = []
+
+    # Calculate the center points of the filtered boxes
+    for (x1, y1, x2, y2) in filtered_boxes:
+        # Calculate the center of the found element
+        center_x = (x1 + x2) // 2
+        center_y = (y1 + y2) // 2
+
+        # Add the center coordinates to the list
+        found_elements.append((center_x, center_y))
+
+    # Return the list of center coordinates of all found elements or None if no elements found
+    return found_elements if found_elements else None
