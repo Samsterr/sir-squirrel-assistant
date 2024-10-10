@@ -283,7 +283,7 @@ def encounter_reward_select():
                         "pictures/mirror/encounter_reward/cost_gift.png",
                         "pictures/mirror/encounter_reward/gift.png",
                         "pictures/mirror/encounter_reward/cost.png",
-                        "pictures/mirror/encounter_reward/resource.png.png"]
+                        "pictures/mirror/encounter_reward/resource.png"]
     
     for rewards in encounter_reward:
         if common.element_exist(rewards):
