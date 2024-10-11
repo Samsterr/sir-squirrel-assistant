@@ -39,8 +39,8 @@ These are features i intend to add when i have time for Sir Squirrel
 
 # Known Issues
 These are the current known issues right now
-* Level Up screen not being accounted for
 * KQE Event isn't handled properly
+* Battle Events being inconsistent at times
 
 # Bug Reporting
 Please let me know about any issues you face with Sir Squirrel and I will do my best to look into it.
