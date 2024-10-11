@@ -88,7 +88,7 @@ def start_mirror(status, squad_order):
         run_complete = 1
         win_flag = 1
         return win_flag,run_complete
-    
+
     if common.element_exist("pictures/mirror/general/gift_select.png"): #Checks if in gift select
         gift_selection(status)
     
@@ -106,7 +106,7 @@ def start_mirror(status, squad_order):
     
     if common.element_exist("pictures/battle/winrate.png"):
         battle()
-    
+
     if common.element_exist("pictures/mirror/general/event.png"):
         event_choice()
 
@@ -301,7 +301,7 @@ def encounter_reward_select():
 def navigation():
     """Core navigation function to reach the end of floor"""
     logger.info("Navigating")
-    node_y = [455,142,777,605] #Middle node is the most occuring so its first
+    node_y = [455,142,777,615,297] #Middle node is the most occuring so its first
 
     #Checks incase continuing quitted out MD
     common.click_matching("pictures/mirror/general/danteh.png")
@@ -309,8 +309,8 @@ def navigation():
         common.key_press("enter")
     else:
     #Find which node is the traversable one
-        for i in range(3):
-            common.mouse_move_click(1083,node_y[i])
+        for i in node_y:
+            common.mouse_move_click(1083,i)
             common.sleep(1)
             if common.element_exist("pictures/mirror/general/md_enter.png"):
                 common.key_press("enter")
