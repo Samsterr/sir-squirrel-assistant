@@ -1,41 +1,66 @@
+import argparse
+import logging
+import os
+import threading
+import keyboard  # Import the keyboard module
 from src import core, mirror, mirror_utils
-import argparse,logging
 
-with open("config/status_selection.txt","r") as f:
+with open("config/status_selection.txt", "r") as f:
     status = [i.strip().lower() for i in f.readlines()]
 
-def wuthering_run(num_runs,logger):
+def exit_program():
+    print("\nHotkey pressed. Exiting the program...")
+    os._exit(0)
+
+# Start a background thread to listen for 'Ctrl+Q'
+def start_exit_listener():
+    keyboard.add_hotkey('ctrl+q', exit_program)  # Register hotkey Ctrl+Q to exit
+    # Keep the listener active without blocking the main thread
+    while True:
+        keyboard.wait('ctrl+q')  # Block until Ctrl+Q is pressed
+
+# Start the listener in a separate thread
+exit_listener_thread = threading.Thread(target=start_exit_listener, daemon=True)
+exit_listener_thread.start()
+
+def wuthering_run(num_runs, logger):
     run_count = 0
     win_count = 0
     lose_count = 0
     status_list = (status * ((num_runs // len(status)) + 1))[:num_runs]
     logger.info("Starting Run")
     for i in range(num_runs):
-        logger.info("Run {}".format(run_count + 1))
-        core.md_setup()
-        squad_order = mirror.set_sinner_order(status_list[i])
-        run_complete = 0
-        while(run_complete != 1):
-            win_flag, run_complete = mirror.start_mirror(status_list[i],squad_order)
+        try:
+            logger.info("Run {}".format(run_count + 1))
+            core.md_setup()
+            squad_order = mirror.set_sinner_order(status_list[i])
+            run_complete = 0
+            while(run_complete != 1):
+                win_flag, run_complete = mirror.start_mirror(status_list[i], squad_order)
 
-        if win_flag == 1:
-            win_count += 1
-        else:
-            lose_count += 1
-        run_count += 1
+            if win_flag == 1:
+                win_count += 1
+            else:
+                lose_count += 1
+            run_count += 1
+
+        except KeyboardInterrupt:
+            print("\nRun interrupted by user.")
+            break
         
     logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
 
 def main():
     logging.basicConfig(
-    level=logging.DEBUG,  # Set the logging level (e.g., DEBUG, INFO, WARNING)
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Log format
-    handlers=[
-        logging.FileHandler("squirrel.log"),  # Output to a file
-    ])
+        level=logging.DEBUG,  # Set the logging level (e.g., DEBUG, INFO, WARNING)
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Log format
+        handlers=[
+            logging.FileHandler("squirrel.log"),  # Output to a file
+        ]
+    )
     logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser()
-    parser.add_argument("RunCount",  help="How many times you want to run Mirror Dungeons")
+    parser.add_argument("RunCount", help="How many times you want to run Mirror Dungeons")
     args = parser.parse_args()
     try:
         int(args.RunCount)

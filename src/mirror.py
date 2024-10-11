@@ -62,18 +62,17 @@ def start_mirror(status, squad_order):
         logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
         exit()
 
-    #if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
-    #    if common.element_exist("pictures/mirror/general/clear.png"):
-    #        common.click_matching("pictures/general/md_claim.png")
-    #        if common.element_exist("pictures/general/confirm_w.png"):
-    #            logger.info("Rewards Claimed")
-    #            common.click_matching("pictures/general/confirm_w.png")
-    #            common.click_matching("pictures/general/confirm_b.png")
-    #            common.click_matching("pictures/general/cancel.png")
-    #    else:
-    #        common.click_matching("pictures/general/give_up.png")
-    #        common.click_matching("pictures/general/confirm_w.png")
-    #        common.click_matching("pictures/general/cancel.png")
+    if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
+        if common.element_exist("pictures/mirror/general/clear.png"):
+            common.click_matching("pictures/general/md_claim.png")
+            if common.element_exist("pictures/general/confirm_w.png"):
+                logger.info("Rewards Claimed")
+                common.click_matching("pictures/general/confirm_w.png")
+                common.click_matching("pictures/general/confirm_b.png")
+                common.click_matching("pictures/general/cancel.png")
+        else:
+            common.click_matching("pictures/general/give_up.png")
+            common.click_matching("pictures/general/cancel.png")
 
     if common.element_exist("pictures/general/defeat.png"):
         defeat()
@@ -334,17 +333,27 @@ def market_shopping(status_effect):
         #and len(common.match_image("pictures/mirror/reststop/sanity.png")) < 12):
         #    #Click on heal and heal all, then click til the continue prompt shows up
         common.click_matching("pictures/mirror/market/heal.png")
+        
         if common.element_exist("pictures/mirror/market/heal_all.png"): #if you cant afford this will not show up so check for it
-            logger.debug("MARKET: HEALING ALL")
-            common.click_matching("pictures/mirror/market/heal_all.png")
-            common.wait_skip("pictures/events/continue.png")
+            found = common.match_image("pictures/mirror/market/heal_all.png")
+            x,y = found[0]
+            logger.debug(common.luminence(x,y))
+            if common.luminence(x,y) > 8:
+                logger.debug("MARKET: HEALING ALL")
+                common.click_matching("pictures/mirror/market/heal_all.png")
+                common.wait_skip("pictures/events/continue.png")
+            else:
+                logger.debug("MARKET: Sinners Maxxed HP/SP")
+                common.click_matching("pictures/mirror/market/back.png")
 
         for _ in range(3):
             market_gifts = []
-            if common.element_exist("pictures/mirror/market/wordless.png"):
-                market_gifts += common.match_image("pictures/mirror/market/wordless.png") #keywordless gifts
+            
             if common.element_exist(status):
                 market_gifts += common.match_image(status)
+            #keywordless gifts
+            if common.element_exist("pictures/mirror/market/wordless.png"):
+                market_gifts += common.match_image("pictures/mirror/market/wordless.png")
             if len(market_gifts):
                 for i in market_gifts:
                     x,y = i
@@ -387,16 +396,18 @@ def rest_stop(status_effect):
 
         common.click_matching("pictures/mirror/reststop/heal_sinner.png")
         if common.element_exist("pictures/mirror/reststop/heal_all.png"): #checks if prompt does enter
-            common.click_matching("pictures/mirror/reststop/heal_all.png") #This is to check for successful healing
-            common.click_matching("pictures/events/skip.png")
-            for i in range(3):
-                common.mouse_click() #clearing the dialog to check for continue
-            if common.element_exist("pictures/events/continue.png"): #successful heal
-                logger.debug("REST STOP: HEALING ALL SINNERS")
-                common.click_matching("pictures/events/continue.png")
-            else:
+            found = common.match_image("pictures/mirror/reststop/heal_all.png")
+            x,y = found[0]
+            logger.debug(common.luminence(x,y))
+            if common.luminence(x,y) < 6:
                 logger.debug("REST STOP: UNSUCCESSFULLY HEALED SINNERS")
                 common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
+            else:
+                common.click_matching("pictures/mirror/reststop/heal_all.png") #This is to check for successful healing
+                common.click_skip(3)
+                if common.element_exist("pictures/events/continue.png"): #successful heal
+                    logger.debug("REST STOP: HEALING ALL SINNERS")
+                    common.click_matching("pictures/events/continue.png")
 
         common.click_matching("pictures/mirror/reststop/enhance.png")
         logger.debug("REST STOP: ENHANCING EGO GIFTS")
@@ -410,57 +421,43 @@ def rest_stop(status_effect):
         common.click_matching("pictures/mirror/reststop/leave.png")
         common.click_matching("pictures/general/confirm_w.png")
 
+def upgrade(status,shift_x,shift_y):
+    gifts = common.match_image(status)
+    for x,y in gifts:
+        logger.debug(common.luminence(x+shift_x,y+shift_y))
+        if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
+            continue
+        common.mouse_move_click(x,y)
+        for _ in range(2): #upgrading twice
+            if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
+                break
+            common.click_matching("pictures/mirror/reststop/power_up.png")
+            if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
+                logger.debug("REST STOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
+                common.click_matching("pictures/mirror/reststop/cancel.png")
+                common.sleep(1)
+                common.mouse_click()
+                return
+            elif common.element_exist("pictures/mirror/reststop/confirm.png"):
+                logger.debug("REST STOP: EGO STATUS GIFT UPGRADED")
+                common.click_matching("pictures/mirror/reststop/confirm.png")
+
 def enhance_gifts(status, status_effect):
     """Enhancement gift process"""
-    for _ in range(2):
+    for _ in range(3):
         if common.element_exist(status):
             shift_x, shift_y = mirror_utils.enhance_shift(status_effect) or (9, -30)
-            gifts = common.match_image(status)
-            for x,y in gifts:
-                logger.debug(common.luminence(x+shift_x,y+shift_y))
-                if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
-                    continue
-                common.mouse_move_click(x,y)
-                for _ in range(2): #upgrading twice
-                    if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
-                        break
-                    common.click_matching("pictures/mirror/reststop/power_up.png")
-                    if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
-                        logger.debug("REST STOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
-                        common.click_matching("pictures/mirror/reststop/cancel.png")
-                        common.sleep(1)
-                        common.mouse_click()
-                        return
-                    elif common.element_exist("pictures/mirror/reststop/confirm.png"):
-                        logger.debug("REST STOP: EGO STATUS GIFT UPGRADED")
-                        common.click_matching("pictures/mirror/reststop/confirm.png")
+            upgrade(status,shift_x,shift_y)
                         
         if common.element_exist("pictures/mirror/reststop/wordless_enhance.png"):
             shift_x, shift_y = mirror_utils.enhance_shift("wordless")
-            gifts = common.match_image(status)
-            for x,y in gifts:
-                logger.debug(common.luminence(x+shift_x,y+shift_y))
-                if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
-                    continue
-                common.mouse_move_click(x,y)
-                for _ in range(2): #upgrading twice
-                    if common.element_exist("pictures/mirror/reststop/fully_upgraded.png"): #if fully upgraded skip this item
-                        break
-                    common.click_matching("pictures/mirror/reststop/power_up.png")
-                    if common.element_exist("pictures/mirror/reststop/more.png"): #If player has no more cost exit
-                        logger.debug("REST STOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
-                        common.click_matching("pictures/mirror/reststop/cancel.png")
-                        common.sleep(1)
-                        common.mouse_click()
-                        return
-                    elif common.element_exist("pictures/mirror/reststop/confirm.png"):
-                        logger.debug("REST STOP: KEYWORDLESS EGO GIFT UPGRADED")
-                        common.click_matching("pictures/mirror/reststop/confirm.png")
+            upgrade("pictures/mirror/reststop/wordless_enhance.png", shift_x,shift_y)
 
         if common.element_exist("pictures/mirror/reststop/scroll_bar.png"):
             common.click_matching("pictures/mirror/reststop/scroll_bar.png")
             for k in range(5):
                 common.mouse_scroll(-1000)
+            common.sleep(1)
 
 def event_choice():
     logger.info("Event")
