@@ -63,7 +63,9 @@ def start_mirror(status, squad_order):
         exit()
 
     if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
+        logger.info("Existing Run Detected")
         if common.element_exist("pictures/mirror/general/clear.png"):
+            logger.info("Run Cleared")
             common.click_matching("pictures/general/md_claim.png")
             if common.element_exist("pictures/general/confirm_w.png"):
                 logger.info("Rewards Claimed")
@@ -71,6 +73,7 @@ def start_mirror(status, squad_order):
                 common.click_matching("pictures/general/confirm_b.png")
                 common.click_matching("pictures/general/cancel.png")
         else:
+            logger.info("Run Not Cleared, Giving Up")
             common.click_matching("pictures/general/give_up.png")
             common.click_matching("pictures/general/cancel.png")
 
@@ -445,6 +448,7 @@ def upgrade(status,shift_x,shift_y):
 def enhance_gifts(status, status_effect):
     """Enhancement gift process"""
     for _ in range(3):
+        common.sleep(1)
         if common.element_exist(status):
             shift_x, shift_y = mirror_utils.enhance_shift(status_effect) or (9, -30)
             upgrade(status,shift_x,shift_y)
@@ -456,11 +460,16 @@ def enhance_gifts(status, status_effect):
         if common.element_exist("pictures/mirror/reststop/scroll_bar.png"):
             common.click_matching("pictures/mirror/reststop/scroll_bar.png")
             for k in range(5):
-                common.mouse_scroll(-1000)
-            common.sleep(1)
+                common.mouse_scroll(-1000)  
 
 def event_choice():
     logger.info("Event")
+    if common.element_exist("pictures/events/level_up.png"):
+        logger.debug("Pass to Level Up")
+        common.click_matching("pictures/events/level_up.png")
+        common.click_matching("pictures/events/proceed.png")
+        skill_check()
+        
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
         logger.debug("Select to gain EGO Gift")
         common.click_matching("pictures/events/select_gain.png")
@@ -495,6 +504,9 @@ def event_choice():
 
 def victory():
     logger.info("Run Won")
+    if common.element_exist("pictures/general/confirm_w.png"):
+        logger.debug("Manager Level Up")
+        common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/beeg_confirm.png")
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/md_claim.png")
@@ -512,6 +524,9 @@ def victory():
 
 def defeat():
     logger.info("Run Lost")
+    if common.element_exist("pictures/general/confirm_w.png"):
+        logger.debug("Manager Level Up")
+        common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/beeg_confirm.png")
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/give_up.png")

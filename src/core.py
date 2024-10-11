@@ -46,13 +46,15 @@ def battle():
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
     common.click_skip(8)
-    common.sleep(0.5) #short sleep to see if it fixes the issue
+    common.sleep(1) #short sleep to see if it fixes the issue
     if common.element_exist("pictures/battle/investigate.png"): #Woppily
+        logger.debug("WOPPILY")
         common.click_matching("pictures/battle/investigate.png")
         common.wait_skip("pictures/events/continue.png")
         return 0
         
     if common.element_exist("pictures/battle/NO.png"): #Woppily
+        logger.debug("WOPPILY PT2")
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
             common.click_matching("pictures/events/skip.png")
@@ -67,12 +69,14 @@ def battle_check(): #pink shoes, woppily, doomsday clock
                 common.mouse_click()
 
     if common.element_exist("pictures/battle/refuse.png"): # Pink Shoes
+        logger.debug("PINK SHOES")
         common.click_matching("pictures/battle/refuse.png")
         common.wait_skip("pictures/events/proceed.png")
         skill_check()
         return 0
     
     if common.element_exist("pictures/battle/offer_sinner.png"): #Doomsday Clock
+        logger.debug("DOOMSDAY CLOCK")
         found = common.match_image("pictures/battle/offer_clay.png")
         if found:
             x,y = found[0]

@@ -34,6 +34,7 @@ def wuthering_run(num_runs, logger):
             logger.info("Run {}".format(run_count + 1))
             core.md_setup()
             squad_order = mirror.set_sinner_order(status_list[i])
+            logger.info("Current Team: "+status_list[i])
             run_complete = 0
             while(run_complete != 1):
                 win_flag, run_complete = mirror.start_mirror(status_list[i], squad_order)
