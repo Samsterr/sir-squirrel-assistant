@@ -66,7 +66,8 @@ So an example bug report would be something like
 Sir Squirrel was stuck at a skill check for Doomsday clock where it doesn't click on the option for the skill check
 
 # Instructions
-Do note that due to the current nature of how Sir Squirrel operates a few things need to be properly set before running it which i will outline here
+Do note that due to the current nature of how Sir Squirrel operates a few things need to be properly set before running it which i will outline here.
+Sir Squirrel also has a keypress combination to stop it forcefully at any point by pressing (CTRL + Q)
 
 1) Sir Squirrel only works for 1920x1080p Resolution. Either Borderless Fullscreen(Recommended) or Windowed
     * To use borderless fullscreen, press Alt+Enter on your keyboard while Limbus Company is in windowed mode.
