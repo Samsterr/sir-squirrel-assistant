@@ -35,7 +35,10 @@ def battle():
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
-            if battle_check() != 0:
+            common.click_skip(10)
+            if common.element_exist("pictures/mirror/general/event.png"):
+                battle_check()
+            else:
                 skill_check()
         if common.element_exist("pictures/battle/winrate.png"):
             common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
@@ -45,7 +48,7 @@ def battle():
 
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
-    common.click_skip(10)
+    
     common.sleep(1)
     if common.element_exist("pictures/battle/investigate.png"): #Woppily
         logger.debug("WOPPILY")
