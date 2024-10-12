@@ -124,6 +124,7 @@ def start_mirror(status, squad_order):
 
     if common.element_exist("pictures/events/skip.png"): #if hitting the events click skip to determine which is it
         logger.info("Entered ? node")
+        common.mouse_move(200,200)
         common.click_skip(4)
 
     return win_flag,run_complete
@@ -291,7 +292,7 @@ def encounter_reward_select():
         if common.element_exist(rewards):
             common.click_matching(rewards)
             common.click_matching("pictures/general/confirm_b.png")
-            #ommon.sleep(1)
+            common.sleep(1)
             if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
                 common.click_matching("pictures/general/confirm_b.png")
             break
@@ -473,13 +474,18 @@ def event_choice():
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
         logger.debug("Select to gain EGO Gift")
         common.click_matching("pictures/events/select_gain.png")
-        common.wait_skip("pictures/events/continue.png")
-        common.key_press("enter")
+        if common.element_exist("pictures/events/proceed.png"):
+            common.wait_skip("pictures/events/proceed.png")
+        else:
+            common.wait_skip("pictures/events/continue.png")
+        common.sleep(1)
+        if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
+            common.key_press("enter")
 
     if common.element_exist("pictures/events/gain_check.png"): #Pass to gain an EGO Gift
         logger.debug("Pass to gain EGO Gift")
         common.click_matching("pictures/events/gain_check.png")
-        common.click_matching("pictures/events/proceed.png")
+        common.wait_skip("pictures/events/proceed.png")
         skill_check()
 
     if common.element_exist("pictures/events/gain_gift.png"): #Proceed to gain
@@ -495,12 +501,14 @@ def event_choice():
         common.click_matching("pictures/events/win_battle.png")
         common.wait_skip("pictures/events/commence_battle.png")
 
-    #special_events()
+    special_events()
 
-#def special_events():
-#    if common.element_exist("mirror/events/kqe.png"):
-#        common.click_matching("mirror/events/kqe.png")
-#        common.wait_skip("pictures/events/continue.png")
+def special_events():
+    if common.element_exist("pictures/mirror/events/kqe.png"):
+        common.click_matching("pictures/mirror/events/kqe.png")
+        common.wait_skip("pictures/events/continue.png")
+        if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
+            common.key_press("enter") 
 
 def victory():
     logger.info("Run Won")

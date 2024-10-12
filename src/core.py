@@ -45,8 +45,8 @@ def battle():
 
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
-    common.click_skip(8)
-    common.sleep(1) #short sleep to see if it fixes the issue
+    common.click_skip(10)
+    common.sleep(1)
     if common.element_exist("pictures/battle/investigate.png"): #Woppily
         logger.debug("WOPPILY")
         common.click_matching("pictures/battle/investigate.png")
@@ -81,8 +81,8 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         if found:
             x,y = found[0]
             logger.debug("Found Clay Option")
-            if common.luminence(x,y+15) != 26 : 
-                logger.debug("Offer cLAY USED")
+            if common.luminence(x,y+16) > 24: 
+                logger.debug("Offer CLAY USED")
                 common.click_matching("pictures/battle/offer_clay.png")
                 common.wait_skip("pictures/events/continue.png")
                 return 0
@@ -124,4 +124,4 @@ def skill_check():
         
     common.sleep(1) #in the event of ego gifts
     if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
-        common.key_press("enter")
+        common.click_matching("pictures/general/confirm_b.png")
