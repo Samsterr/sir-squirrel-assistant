@@ -70,10 +70,12 @@ Do note that due to the current nature of how Sir Squirrel operates a few things
 Sir Squirrel also has a keypress combination to stop it forcefully at any point by pressing (CTRL + Q)
 
 1) Sir Squirrel only works for 1920x1080p Resolution. Either Borderless Fullscreen(Recommended) or Windowed
+    * If your native resolution is not 1080P please do not use borderless fullscreen
     * To use borderless fullscreen, press Alt+Enter on your keyboard while Limbus Company is in windowed mode.
     * If you are using windowed mode make sure you double click the Top Bar to make sure the window is scaled and nothing below is blocked
+    * If you are on a higher resolution than 1080P, you can still use sir squirrel. Just simply change the resolution to windowed 1080p and move the window such that the top left corner is at the top left of your monitor
 
-2) Edit the files in the config folder before running
+3) Edit the files in the config folder before running
     * Although i have already prefilled the files, i still recommend you make edits tailoured towards your own teams
 
 ### status_selection.txt
