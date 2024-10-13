@@ -158,7 +158,7 @@ def initial_squad_selection(squad_status):
     logger.info("Mirror Dungeon Squad Select")
     status = mirror_utils.squad_choice(squad_status)
     if status is None:
-        common.click_matching("pictures/general/squad_confirm.png")
+        common.key_press("enter")
         return
     
     #This is to bring us to the first entry of teams
@@ -174,7 +174,8 @@ def initial_squad_selection(squad_status):
             common.sleep(1)
             continue
         else:
-            common.click_matching(status)
+            common.key_press("enter")
+            #common.click_matching(status)
             break
 
     common.click_matching("pictures/general/squad_confirm.png")
@@ -516,12 +517,14 @@ def victory():
         logger.debug("Manager Level Up")
         common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/beeg_confirm.png")
+    common.mouse_move(200,200)
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/md_claim.png")
+    common.sleep(0.5)
     if common.element_exist("pictures/general/confirm_w.png"):
         logger.info("Rewards Claimed")
         common.click_matching("pictures/general/confirm_w.png")
-        common.click_matching("pictures/general/confirm_b.png")
+        common.key_press("enter")
         check_loading()
     else: #incase not enough modules
         common.click_matching("pictures/general/to_window.png")
@@ -536,6 +539,7 @@ def defeat():
         logger.debug("Manager Level Up")
         common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/beeg_confirm.png")
+    common.mouse_move(200,200)
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/give_up.png")
     common.click_matching("pictures/general/confirm_w.png")
