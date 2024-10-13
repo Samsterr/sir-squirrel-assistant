@@ -475,10 +475,15 @@ def event_choice():
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
         logger.debug("Select to gain EGO Gift")
         common.click_matching("pictures/events/select_gain.png")
-        if common.element_exist("pictures/events/proceed.png"):
-            common.wait_skip("pictures/events/proceed.png")
-        else:
-            common.wait_skip("pictures/events/continue.png")
+        common.click_matching("pictures/events/skip.png")
+        while(True):
+            common.mouse_click()
+            if common.element_exist("pictures/events/proceed.png"):
+                common.click_matching("pictures/events/proceed.png")
+                break
+            if common.element_exist("pictures/events/continue.png"):
+                common.click_matching("pictures/events/continue.png")
+                break
         common.sleep(1)
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
             common.key_press("enter")
@@ -506,6 +511,7 @@ def event_choice():
 
 def special_events():
     if common.element_exist("pictures/mirror/events/kqe.png"):
+        logger.debug("KQE")
         common.click_matching("pictures/mirror/events/kqe.png")
         common.wait_skip("pictures/events/continue.png")
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
