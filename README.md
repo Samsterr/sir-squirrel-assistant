@@ -39,8 +39,7 @@ These are features i intend to add when i have time for Sir Squirrel
 
 # Known Issues
 These are the current known issues right now
-* KQE Event isn't handled properly
-* Battle Events being inconsistent at times
+* Battle Events being inconsistent at times (Testing Fix right now)
 
 # Bug Reporting
 Please let me know about any issues you face with Sir Squirrel and I will do my best to look into it.
