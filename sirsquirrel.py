@@ -3,7 +3,7 @@ import logging
 import os
 import threading
 import keyboard  # Import the keyboard module
-from src import core, mirror, mirror_utils
+from src import core, mirror
 
 with open("config/status_selection.txt", "r") as f:
     status = [i.strip().lower() for i in f.readlines()]

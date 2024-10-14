@@ -174,11 +174,10 @@ def initial_squad_selection(squad_status):
             common.sleep(1)
             continue
         else:
-            common.key_press("enter")
-            #common.click_matching(status)
+            common.click_matching(status)
             break
 
-    common.click_matching("pictures/general/squad_confirm.png")
+    common.key_press("enter")
     check_loading() #Theres a load screen when going from Squad to Pack
 
 
@@ -530,7 +529,10 @@ def victory():
     if common.element_exist("pictures/general/confirm_w.png"):
         logger.info("Rewards Claimed")
         common.click_matching("pictures/general/confirm_w.png")
-        common.key_press("enter")
+        common.sleep(0.5)
+        if common.element_exist("pictures/general/confirm_b.png"):
+            logger.debug("BP PROMPT")
+            common.key_press("enter")
         check_loading()
     else: #incase not enough modules
         common.click_matching("pictures/general/to_window.png")
