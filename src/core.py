@@ -118,12 +118,15 @@ def skill_check():
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    common.click_skip(10)
-
-    if common.element_exist("pictures/events/continue.png"):
-        common.click_matching("pictures/events/continue.png")
-    if common.element_exist("pictures/events/proceed.png"):
-        common.click_matching("pictures/events/proceed.png")
+    common.click_matching("pictures/events/skip.png")
+    while(True):
+        common.mouse_click()
+        if common.element_exist("pictures/events/proceed.png"):
+            common.click_matching("pictures/events/proceed.png")
+            break
+        if common.element_exist("pictures/events/continue.png"):
+            common.click_matching("pictures/events/continue.png")
+            break
         
     common.sleep(1) #in the event of ego gifts
     if common.element_exist("pictures/mirror/general/ego_gift_get.png"):

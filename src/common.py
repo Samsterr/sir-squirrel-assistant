@@ -6,6 +6,8 @@ import pyautogui
 import json
 import secrets
 
+pyautogui.FAILSAFE = False
+
 def random_choice(list):
     return secrets.choice(list)
 
