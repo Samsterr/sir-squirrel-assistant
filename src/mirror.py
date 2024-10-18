@@ -36,6 +36,12 @@ def transition_loading():
     logger.info("Moving to Next Floor")
     common.sleep(5)
 
+def post_run_load():
+    """There is some oddity in the loading time for this that makes it annoying to measure so this is a blanket wait for main menu stall"""
+    while(not common.element_exist("pictures/general/module.png")):
+        common.sleep(1)
+    logger.info("Loaded back to Main Menu")
+
 def start_mirror(status, squad_order):
     run_complete = 0
     win_flag = 0
@@ -202,8 +208,8 @@ def pack_selection(status_effect):
         logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
         return pack_list(floor)
         
-    if common.element_exist(status, 0.75) and not exclusion_detection(floor): #if pack exclusion absent and status exists
-        logger.debug("pack exclusion not detected, choosing from status")
+    if common.element_exist(status, 0.75) and not exclusion_detection(floor) and floor != "f4": #if pack exclusion absent and status exists
+        logger.debug("PACKS: pack exclusion not detected, status detected, choosing from status")
         return choose_pack(status, 0.75)
     
     if common.element_exist(status,0.75) and exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
@@ -287,7 +293,7 @@ def encounter_reward_select():
                         "pictures/mirror/encounter_reward/gift.png",
                         "pictures/mirror/encounter_reward/cost.png",
                         "pictures/mirror/encounter_reward/resource.png"]
-    
+    common.sleep(1) #For some instances the cards slide takes really long
     for rewards in encounter_reward:
         if common.element_exist(rewards):
             common.click_matching(rewards)
@@ -474,7 +480,7 @@ def event_choice():
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
         logger.debug("Select to gain EGO Gift")
         common.click_matching("pictures/events/select_gain.png")
-        common.click_matching("pictures/events/skip.png")
+        common.mouse_move_click(897,496)
         while(True):
             common.mouse_click()
             if common.element_exist("pictures/events/proceed.png"):
@@ -533,12 +539,12 @@ def victory():
         if common.element_exist("pictures/general/confirm_b.png"):
             logger.debug("BP PROMPT")
             common.key_press("enter")
-        check_loading()
+        post_run_load()
     else: #incase not enough modules
+        logger.info("You dont have enough modules to continue")
         common.click_matching("pictures/general/to_window.png")
         common.click_matching("pictures/general/confirm_w.png")
-        check_loading()
-        logger.info("You dont have enough modules to continue")
+        post_run_load()
         exit() 
 
 def defeat():
@@ -551,4 +557,4 @@ def defeat():
     common.click_matching("pictures/general/claim_rewards.png")
     common.click_matching("pictures/general/give_up.png")
     common.click_matching("pictures/general/confirm_w.png")
-    check_loading()
+    post_run_load()

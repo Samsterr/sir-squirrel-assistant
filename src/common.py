@@ -205,21 +205,15 @@ def match_image(template_path ,threshold=0.8):
 
 def click_skip(times):
     """Click Skip the amount of time specified"""
-    click_matching("pictures/events/skip.png")
+    mouse_move_click(897,496)
     for i in range(times):
         mouse_click()
 
 def wait_skip(img_path, threshold=0.8):
-    click_matching("pictures/events/skip.png")
+    mouse_move_click(897,496)
     while(not element_exist(img_path,threshold)):
         mouse_click()
     click_matching(img_path,threshold)
-
-def wait_click(image_path,threshold=0.8):
-    """Waits for an image to match and click centre of the image"""
-    while(not match_image(image_path,threshold)):
-        sleep(1)
-    click_matching(image_path,threshold)
 
 def click_matching(image_path,threshold=0.8):
     if element_exist(image_path):
@@ -227,21 +221,6 @@ def click_matching(image_path,threshold=0.8):
         x,y = found[0]
         mouse_move_click(x,y)
         time.sleep(1)
-        
-def press_matching(key,image_path):
-    """Waits for an image to match and presses a key"""
-    found = match_image(image_path)
-
-    #Searches until Image Found if supposed to be found
-    if found is None:
-        time.sleep(3)
-        press_matching(key,image_path)
-
-    #if found, presses the key specified
-    else:
-        time.sleep(2)
-        x,y = found[0]
-        key_press(key)
         
 #dk if i need this for element checking
 def element_exist(img_path,threshold=0.8):
