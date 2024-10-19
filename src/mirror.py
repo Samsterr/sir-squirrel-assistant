@@ -293,7 +293,7 @@ def encounter_reward_select():
                         "pictures/mirror/encounter_reward/gift.png",
                         "pictures/mirror/encounter_reward/cost.png",
                         "pictures/mirror/encounter_reward/resource.png"]
-    common.sleep(1) #For some instances the cards slide takes really long
+    common.sleep(2) #For some instances the cards slide takes really long
     for rewards in encounter_reward:
         if common.element_exist(rewards):
             common.click_matching(rewards)
@@ -480,7 +480,7 @@ def event_choice():
     if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
         logger.debug("Select to gain EGO Gift")
         common.click_matching("pictures/events/select_gain.png")
-        common.mouse_move_click(897,496)
+        common.mouse_move_click(897,465)
         while(True):
             common.mouse_click()
             if common.element_exist("pictures/events/proceed.png"):
