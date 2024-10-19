@@ -25,6 +25,24 @@ def md_setup():
         refill_enkephalin()
         navigate_to_md()
 
+def check_loading():
+    """Handles the loading screen transitions"""
+    common.sleep(2) #Handles fade to black
+    if common.element_exist("pictures/general/loading.png"): #checks for loading screen bar
+        logger.info("Loading")
+        common.sleep(5) #handles the remaining loading
+
+def transition_loading():
+    """Theres a load that occurs while transitioning to the next floor"""
+    logger.info("Moving to Next Floor")
+    common.sleep(5)
+
+def post_run_load():
+    """There is some oddity in the loading time for this that makes it annoying to measure so this is a blanket wait for main menu stall"""
+    while(not common.element_exist("pictures/general/module.png")):
+        common.sleep(1)
+    logger.info("Loaded back to Main Menu")
+    
 def battle():
     """Handles battles by mashing winrate, also handles skill checks and end of battle loading"""
     logger.info("Starting Battle")
@@ -60,14 +78,14 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         logger.debug("WOPPILY PT2")
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
-            common.click_matching("pictures/events/skip.png")
+            common.mouse_move_click(897,496)
             while(not common.element_exist("pictures/events/proceed.png")):
                 if common.element_exist("pictures/events/continue.png"):
                     common.click_matching("pictures/events/continue.png")
                     return 0
                 common.mouse_click()
             common.click_matching("pictures/events/proceed.png")
-            common.click_matching("pictures/events/skip.png")
+            common.mouse_move_click(897,496)
             while(not common.element_exist("pictures/battle/NO.png")):
                 common.mouse_click()
 
@@ -118,7 +136,7 @@ def skill_check():
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    common.click_matching("pictures/events/skip.png")
+    common.mouse_move_click(897,496)
     while(True):
         common.mouse_click()
         if common.element_exist("pictures/events/proceed.png"):
@@ -130,13 +148,12 @@ def skill_check():
     if common.element_exist("pictures/events/skip.png"):
         common.click_skip(2)
         common.click_matching("pictures/battle/violet_hp.png")
-        common.click_matching("pictures/events/skip.png")
+        common.mouse_move_click(897,496)
         while(True):
             common.mouse_click()
             if common.element_exist("pictures/events/continue.png"):
                 common.click_matching("pictures/events/continue.png")
-                break
-            
+                break   
     else:
         common.sleep(1) #in the event of ego gifts
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"):

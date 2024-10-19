@@ -9,6 +9,7 @@ pictures/mirror/packs/f3/indolence.png
 pictures/mirror/packs/f3/crushed.png
 pictures/mirror/packs/f3/cleaved.png
 pictures/mirror/packs/f3/crushers.png
+pictures/mirror/packs/f3/dregs.png
 pictures/mirror/packs/f3/subservience.png
 pictures/mirror/packs/f3/piercers.png
 pictures/mirror/packs/f3/flowers.png

@@ -23,7 +23,7 @@ def start_exit_listener():
 exit_listener_thread = threading.Thread(target=start_exit_listener, daemon=True)
 exit_listener_thread.start()
 
-def wuthering_run(num_runs, logger):
+def mirror_dungeon_run(num_runs, logger):
     run_count = 0
     win_count = 0
     lose_count = 0
@@ -33,11 +33,12 @@ def wuthering_run(num_runs, logger):
         try:
             logger.info("Run {}".format(run_count + 1))
             core.md_setup()
-            squad_order = mirror.set_sinner_order(status_list[i])
+            #squad_order = mirror.set_sinner_order(status_list[i])
             logger.info("Current Team: "+status_list[i])
             run_complete = 0
+            MD = mirror.Mirror(status_list[i])
             while(run_complete != 1):
-                win_flag, run_complete = mirror.start_mirror(status_list[i], squad_order)
+                win_flag, run_complete = MD.start_mirror()
 
             if win_flag == 1:
                 win_count += 1
@@ -61,15 +62,9 @@ def main():
     )
     logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser()
-    parser.add_argument("RunCount", help="How many times you want to run Mirror Dungeons")
+    parser.add_argument("RunCount", help="How many times you want to run Mirror Dungeons", type=int)
     args = parser.parse_args()
-    try:
-        int(args.RunCount)
-    except ValueError:
-        print("Invalid Value")
-        exit()
-
-    wuthering_run(int(args.RunCount), logger)
+    mirror_dungeon_run(args.RunCount, logger)
 
 if __name__ == "__main__":
     main()
