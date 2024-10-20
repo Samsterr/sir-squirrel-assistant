@@ -166,11 +166,13 @@ class Mirror:
                 for i in range(7):
                     common.mouse_scroll(-1000)
                 common.sleep(1)
+                if common.element_exist(status):
+                    common.click_matching(status)
+                    break
                 continue
             else:
                 common.click_matching(status)
                 break
-
         common.key_press("enter")
         check_loading() #Theres a load screen when going from Squad to Pack
 
@@ -287,6 +289,9 @@ class Mirror:
                 common.click_matching(rewards)
                 common.click_matching("pictures/general/confirm_b.png")
                 common.sleep(1)
+                if common.element_exist("pictures/mirror/encounter_reward/prompt.png"):
+                    common.key_press("enter")
+                    break
                 if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
                     common.click_matching("pictures/general/confirm_b.png")
                 break
@@ -468,7 +473,8 @@ class Mirror:
         if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
             self.logger.debug("Select to gain EGO Gift")
             common.click_matching("pictures/events/select_gain.png")
-            common.mouse_move_click(897,496)
+            x,y = common.find_skip()
+            common.mouse_move_click(x,y)
             while(True):
                 common.mouse_click()
                 if common.element_exist("pictures/events/proceed.png"):

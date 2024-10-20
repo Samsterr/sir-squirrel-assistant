@@ -30,25 +30,19 @@ def mirror_dungeon_run(num_runs, logger):
     status_list = (status * ((num_runs // len(status)) + 1))[:num_runs]
     logger.info("Starting Run")
     for i in range(num_runs):
-        try:
-            logger.info("Run {}".format(run_count + 1))
-            core.md_setup()
-            #squad_order = mirror.set_sinner_order(status_list[i])
-            logger.info("Current Team: "+status_list[i])
-            run_complete = 0
-            MD = mirror.Mirror(status_list[i])
-            while(run_complete != 1):
-                win_flag, run_complete = MD.start_mirror()
-
-            if win_flag == 1:
-                win_count += 1
-            else:
-                lose_count += 1
-            run_count += 1
-
-        except KeyboardInterrupt:
-            print("\nRun interrupted by user.")
-            break
+        logger.info("Run {}".format(run_count + 1))
+        core.md_setup()
+        #squad_order = mirror.set_sinner_order(status_list[i])
+        logger.info("Current Team: "+status_list[i])
+        run_complete = 0
+        MD = mirror.Mirror(status_list[i])
+        while(run_complete != 1):
+            win_flag, run_complete = MD.start_mirror()
+        if win_flag == 1:
+            win_count += 1
+        else:
+            lose_count += 1
+        run_count += 1
         
     logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
 

@@ -53,7 +53,7 @@ def battle():
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
-            common.click_skip(10)
+            common.click_skip(12)
             if common.element_exist("pictures/mirror/general/event.png"):
                 battle_check()
             else:
@@ -78,14 +78,16 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         logger.debug("WOPPILY PT2")
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
-            common.mouse_move_click(897,496)
+            x,y = common.find_skip()
+            common.mouse_move_click(x,y)
             while(not common.element_exist("pictures/events/proceed.png")):
                 if common.element_exist("pictures/events/continue.png"):
                     common.click_matching("pictures/events/continue.png")
                     return 0
                 common.mouse_click()
             common.click_matching("pictures/events/proceed.png")
-            common.mouse_move_click(897,496)
+            x,y = common.find_skip()
+            common.mouse_move_click(x,y)
             while(not common.element_exist("pictures/battle/NO.png")):
                 common.mouse_click()
 
@@ -136,7 +138,8 @@ def skill_check():
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    common.mouse_move_click(897,496)
+    x,y = common.find_skip()
+    common.mouse_move_click(x,y)
     while(True):
         common.mouse_click()
         if common.element_exist("pictures/events/proceed.png"):
@@ -148,7 +151,8 @@ def skill_check():
     if common.element_exist("pictures/events/skip.png"):
         common.click_skip(2)
         common.click_matching("pictures/battle/violet_hp.png")
-        common.mouse_move_click(897,496)
+        x,y = common.find_skip()
+        common.mouse_move_click(x,y)
         while(True):
             common.mouse_click()
             if common.element_exist("pictures/events/continue.png"):
