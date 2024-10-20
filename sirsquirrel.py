@@ -32,7 +32,6 @@ def mirror_dungeon_run(num_runs, logger):
     for i in range(num_runs):
         logger.info("Run {}".format(run_count + 1))
         core.md_setup()
-        #squad_order = mirror.set_sinner_order(status_list[i])
         logger.info("Current Team: "+status_list[i])
         run_complete = 0
         MD = mirror.Mirror(status_list[i])
