@@ -203,16 +203,21 @@ def match_image(template_path ,threshold=0.8):
     
     return found_elements
 
+def find_skip():
+    found = match_image("pictures/events/skip.png")
+    x,y = found[0]
+    return x,y
+
 def click_skip(times):
     """Click Skip the amount of time specified"""
-    #mouse_move_click(897,496)
-    mouse_move_click(897,465)
+    x,y = find_skip()
+    mouse_move_click(x,y)
     for i in range(times):
         mouse_click()
 
 def wait_skip(img_path, threshold=0.8):
-    #mouse_move_click(897,496)
-    mouse_move_click(897,465)
+    x,y = find_skip()
+    mouse_move_click(x,y)
     while(not element_exist(img_path,threshold)):
         mouse_click()
     click_matching(img_path,threshold)
@@ -228,11 +233,6 @@ def click_matching(image_path,threshold=0.8):
 def element_exist(img_path,threshold=0.8):
     """Checks if the element exists if not returns none"""
     return match_image(img_path,threshold)
-
-def get_position():
-    found = match_image("pictures/events/skip.png")
-    x,y = found[0]
-    print(x,y)
 
 def squad_order(status):
     """Returns a list of the image locations depending on the sinner order specified in the json file"""
