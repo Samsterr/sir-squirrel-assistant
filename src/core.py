@@ -154,16 +154,9 @@ def skill_check():
             break
 
     if common.element_exist("pictures/events/skip.png"):
-        common.click_skip(2)
-        common.click_matching("pictures/battle/violet_hp.png")
-        #x,y = common.find_skip()
-        #common.mouse_move_click(x,y)
-        common.mouse_move_click(901,478)
-        while(True):
-            common.mouse_click()
-            if common.element_exist("pictures/events/continue.png"):
-                common.click_matching("pictures/events/continue.png")
-                break   
+        common.wait_skip("pictures/battle/violet_hp.png")
+        common.wait_skip("pictures/events/continue.png")
+
     else:
         common.sleep(1) #in the event of ego gifts
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"):

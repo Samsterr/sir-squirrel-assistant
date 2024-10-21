@@ -227,14 +227,16 @@ def wait_skip(img_path, threshold=0.8):
 def click_matching(image_path,threshold=0.8):
     if element_exist(image_path):
         found = match_image(image_path,threshold)
-        x,y = found[0]
-        mouse_move_click(x,y)
-        time.sleep(1)
-    else:
-        time.sleep(1)
-        click_matching(image_path,threshold)
-        
-#dk if i need this for element checking
+        if found:
+            x,y = found[0]
+            mouse_move_click(x,y)
+            time.sleep(1)
+        else:
+            click_matching(image_path,threshold)
+    #else:
+    #    time.sleep(1)
+    #    click_matching(image_path,threshold)
+
 def element_exist(img_path,threshold=0.8):
     """Checks if the element exists if not returns none"""
     return match_image(img_path,threshold)

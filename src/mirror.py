@@ -121,6 +121,9 @@ class Mirror:
             common.mouse_move(200,200)
             common.click_skip(4)
 
+        if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
+            common.click_matching("pictures/general/confirm_b.png")
+
         return win_flag,run_complete
 
     def gift_selection(self):
@@ -186,7 +189,7 @@ class Mirror:
         x,y = found[0]
         self.logger.debug(common.luminence(x-3,y))
         refresh_flag = common.luminence(x-3,y) < 13
-
+        common.sleep(2)
         if self.exclusion_detection(floor) and not refresh_flag: #if pack exclusion detected and not refreshed
             self.logger.debug("PACKS: pack exclusion detected, refreshing")
             common.click_matching("pictures/mirror/general/refresh.png")
