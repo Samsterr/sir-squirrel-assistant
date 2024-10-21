@@ -176,7 +176,6 @@ class Mirror:
         common.key_press("enter")
         check_loading() #Theres a load screen when going from Squad to Pack
 
-
     def pack_selection(self):
         """Prioritises the status gifts for packs if not follows a list"""
         self.logger.info("Selecting Pack")
@@ -242,6 +241,7 @@ class Mirror:
                        "pictures/mirror/packs/f4/burning.png",
                        "pictures/mirror/packs/f4/yield.png",
                        "pictures/mirror/packs/f4/sloth.png"]
+            
         detected = any(common.element_exist(i, 0.75) for i in exclusion)
         return int(detected)
 
@@ -402,7 +402,7 @@ class Mirror:
                 found = common.match_image("pictures/mirror/reststop/heal_all.png")
                 x,y = found[0]
                 self.logger.debug(common.luminence(x,y))
-                if common.luminence(x,y) < 6:
+                if common.luminence(x,y) < 7:
                     self.logger.debug("REST STOP: UNSUCCESSFULLY HEALED SINNERS")
                     common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
                 else:
@@ -473,8 +473,9 @@ class Mirror:
         if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
             self.logger.debug("Select to gain EGO Gift")
             common.click_matching("pictures/events/select_gain.png")
-            x,y = common.find_skip()
-            common.mouse_move_click(x,y)
+            #x,y = common.find_skip()
+            #common.mouse_move_click(x,y)
+            common.mouse_move_click(901,478)
             while(True):
                 common.mouse_click()
                 if common.element_exist("pictures/events/proceed.png"):

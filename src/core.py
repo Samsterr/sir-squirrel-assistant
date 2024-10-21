@@ -53,11 +53,14 @@ def battle():
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
-            common.click_skip(12)
-            if common.element_exist("pictures/mirror/general/event.png"):
-                battle_check()
-            else:
-                skill_check()
+            while(True):
+                common.click_skip(1)
+                if common.element_exist("pictures/mirror/general/event.png"):
+                    battle_check()
+                    break
+                if common.element_exist("pictures/events/skill_check.png"):
+                    skill_check()
+                    break
         if common.element_exist("pictures/battle/winrate.png"):
             common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
             common.key_press("p") #win rate keyboard key
@@ -138,8 +141,9 @@ def skill_check():
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    x,y = common.find_skip()
-    common.mouse_move_click(x,y)
+    #x,y = common.find_skip()
+    #common.mouse_move_click(x,y)
+    common.mouse_move_click(901,478)
     while(True):
         common.mouse_click()
         if common.element_exist("pictures/events/proceed.png"):
@@ -148,11 +152,13 @@ def skill_check():
         if common.element_exist("pictures/events/continue.png"):
             common.click_matching("pictures/events/continue.png")
             break
+
     if common.element_exist("pictures/events/skip.png"):
         common.click_skip(2)
         common.click_matching("pictures/battle/violet_hp.png")
-        x,y = common.find_skip()
-        common.mouse_move_click(x,y)
+        #x,y = common.find_skip()
+        #common.mouse_move_click(x,y)
+        common.mouse_move_click(901,478)
         while(True):
             common.mouse_click()
             if common.element_exist("pictures/events/continue.png"):

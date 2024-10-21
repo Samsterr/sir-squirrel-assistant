@@ -210,14 +210,16 @@ def find_skip():
 
 def click_skip(times):
     """Click Skip the amount of time specified"""
-    x,y = find_skip()
-    mouse_move_click(x,y)
+    #x,y = find_skip()
+    #mouse_move_click(x,y)
+    mouse_move_click(901,478)
     for i in range(times):
         mouse_click()
 
 def wait_skip(img_path, threshold=0.8):
-    x,y = find_skip()
-    mouse_move_click(x,y)
+    #x,y = find_skip()
+    #mouse_move_click(x,y)
+    mouse_move_click(901,478)
     while(not element_exist(img_path,threshold)):
         mouse_click()
     click_matching(img_path,threshold)
@@ -228,6 +230,9 @@ def click_matching(image_path,threshold=0.8):
         x,y = found[0]
         mouse_move_click(x,y)
         time.sleep(1)
+    else:
+        time.sleep(1)
+        click_matching(image_path,threshold)
         
 #dk if i need this for element checking
 def element_exist(img_path,threshold=0.8):
