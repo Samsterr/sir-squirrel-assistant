@@ -42,6 +42,17 @@ def post_run_load():
     while(not common.element_exist("pictures/general/module.png")):
         common.sleep(1)
     logger.info("Loaded back to Main Menu")
+
+def reconnect():
+    while(common.element_exist("pictures/general/server_error.png")):
+        common.sleep(6)
+        common.click_matching("pictures/general/retry.png")
+        common.mouse_move(200,200)
+    if common.element_exist("pictures/general/no_op.png"):
+        common.click_matching("pictures/general/close.png")
+        logger.info("COULD NOT RECONNECT TO THE SERVER. SHUTTING DOWN!")
+        exit()
+    logger.info("Reconnected")
     
 def battle():
     """Handles battles by mashing winrate, also handles skill checks and end of battle loading"""
@@ -65,6 +76,9 @@ def battle():
             common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
             common.key_press("p") #win rate keyboard key
             common.key_press("enter") #Battle Start key
+        if common.element_exist("pictures/general/server_error.png"):
+            logger.info("Lost Connection to Server, Reconnecting")
+            reconnect()
     
 
 def battle_check(): #pink shoes, woppily, doomsday clock

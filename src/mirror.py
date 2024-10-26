@@ -1,5 +1,5 @@
 from src import common, mirror_utils
-from src.core import skill_check, battle, check_loading, transition_loading,post_run_load
+from src.core import skill_check,reconnect, battle, check_loading, transition_loading,post_run_load
 import logging
     
 class Mirror:
@@ -50,9 +50,10 @@ class Mirror:
                 self.logger.info("Starting Run")
 
         if common.element_exist("pictures/general/maint.png"):
-            common.click_matching("pictures/general/confirm_b.png")
+            common.click_matching("pictures/general/close.png")
+            common.sleep(0.5)
             common.click_matching("pictures/general/no_op.png")
-            common.click_matching("pictures/general/confirm_b.png")
+            common.click_matching("pictures/general/close.png")
             self.logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
             exit()
 
@@ -82,6 +83,9 @@ class Mirror:
             run_complete = 1
             win_flag = 1
             return win_flag,run_complete
+        
+        if common.element_exist("pictures/general/server_error.png"):
+            reconnect()
 
         if common.element_exist("pictures/mirror/general/gift_select.png"): #Checks if in gift select
             self.gift_selection()
