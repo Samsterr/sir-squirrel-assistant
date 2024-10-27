@@ -134,17 +134,22 @@ class Mirror:
         """selects the ego gift of the same status, fallsback on random if not unlocked"""
         self.logger.info("E.G.O Gift Selection")
         initial_gift_coords = [420,580,740] #The side bar location for EGO Gifts
-        if self.status == "sinking": #Other 2 gifts better
-               initial_gift_coords.pop(0)
-        else:
-               initial_gift_coords.pop(2)
 
         gift = mirror_utils.gift_choice(self.status) or "pictures/mirror/gifts/random.png"
-
         if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
             common.mouse_move(320,289)
             for i in range(5):
                 common.mouse_scroll(-1000)
+        
+        if common.element_exist(gift,0.9) is None: # i forgot to check again if it is not found
+            gift = "pictures/mirror/gifts/random.png"
+            self.status = "random" #Reset the gift to fail the squad selection check
+            self.squad_order = self.set_sinner_order("default") #Uses the default squad
+
+        if self.status == "sinking" or self.status == "slash": #Other 2 gifts better
+               initial_gift_coords.pop(0)
+        else:
+               initial_gift_coords.pop(2)
 
         common.click_matching(gift,0.9) #click on specified
         common.mouse_move_click(1230,initial_gift_coords[0])
@@ -160,8 +165,8 @@ class Mirror:
         status = mirror_utils.squad_choice(self.status)
         if status is None:
             common.key_press("enter")
+            self.status = "poise"
             return
-
         #This is to bring us to the first entry of teams
         common.mouse_move(247,621)
         for i in range(30):

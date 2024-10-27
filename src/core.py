@@ -80,7 +80,6 @@ def battle():
             logger.info("Lost Connection to Server, Reconnecting")
             reconnect()
     
-
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
     
@@ -175,3 +174,4 @@ def skill_check():
         common.sleep(1) #in the event of ego gifts
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
             common.click_matching("pictures/general/confirm_b.png")
+        logger.debug("DEBUG: Finished Skill Check")
