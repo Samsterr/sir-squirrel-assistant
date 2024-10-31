@@ -22,15 +22,18 @@ There are already other auto mirror dungeon tools out there so why should you us
     * Sir Squirrel purchases E.G.O Gifts according to the status you chose as well as keywordless gifts
 
 # Planned Features
-These are features i intend to add when i have time for Sir Squirrel
+These are features i intend to add when i have time for Sir Squirrel development
+* Resolution Awareness
+    * Almost done, mostly missing higher resolution pictures for better scaling and lack of testing on a variety of Resolutions and Aspect Ratios
+
 * Using EGO in battle
-    * I have some rough idea how to accomplish this but i require a lot more testing
+    * Shifted to low priority not necessary for now
 
 * Auto Luxcavation, Threads and Dailies
-    * Not too hard to implement but i do intend to add this eventually when the new stages open up
+    * Shifted to low priority due to mainly focusing on the eventual MD5 update
 
 * GUI
-    * A GUI might be more convienient for users but i do intend to implement this eventually
+    * A GUI might be more convienient for users
 
 * Exception Handling
     * As of right now i do not check for a fair bit of things that can impact Sir Squirrel's performance mainly due to getting a workable product out first but i do intend to add more error messages and handling when i'm more free.
