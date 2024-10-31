@@ -137,7 +137,8 @@ class Mirror:
 
         gift = mirror_utils.gift_choice(self.status) or "pictures/mirror/gifts/random.png"
         if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
-            common.mouse_move(320,289)
+            x,y = common.scale_coordinates(320,289)
+            common.mouse_move(x,y)
             for i in range(5):
                 common.mouse_scroll(-1000)
         
@@ -152,8 +153,8 @@ class Mirror:
                initial_gift_coords.pop(2)
 
         common.click_matching(gift,0.9) #click on specified
-        common.mouse_move_click(1230,initial_gift_coords[0])
-        common.mouse_move_click(1230,initial_gift_coords[1])
+        common.mouse_move_click(common.scale_x(1230),common.scale_y(initial_gift_coords[0]))
+        common.mouse_move_click(common.scale_x(1230),common.scale_y(initial_gift_coords[1]))
         common.click_matching("pictures/mirror/general/confirm_gift.png")
         common.key_press("esc")
         common.sleep(1)
@@ -168,13 +169,14 @@ class Mirror:
             self.status = "poise"
             return
         #This is to bring us to the first entry of teams
-        common.mouse_move(247,621)
+        x,y = common.scale_coordinates(247,621)
+        common.mouse_move(x,y)
         for i in range(30):
             common.mouse_scroll(1000)
         #scrolls through all the squads in steps to look for the name
         for _ in range(4):
             if common.element_exist(status) is None:
-                common.mouse_move(247,621)
+                common.mouse_move(x,y)
                 for i in range(7):
                     common.mouse_scroll(-1000)
                 common.sleep(1)
@@ -196,9 +198,11 @@ class Mirror:
         self.logger.debug("Current Floor "+ floor)
         found = common.match_image("pictures/mirror/general/refresh.png")
         x,y = found[0]
-        self.logger.debug(common.luminence(x-3,y))
-        refresh_flag = common.luminence(x-3,y) < 13
+        self.logger.debug(common.luminence(x-common.scale_x(3),y))
+        refresh_flag = common.luminence(x-common.scale_x(3),y) < 13
+        common.mouse_move(200,200)
         common.sleep(2)
+        self.pack_ss(floor)
         if self.exclusion_detection(floor) and not refresh_flag: #if pack exclusion detected and not refreshed
             self.logger.debug("PACKS: pack exclusion detected, refreshing")
             common.click_matching("pictures/mirror/general/refresh.png")
@@ -227,12 +231,20 @@ class Mirror:
         for i in packs:
             if common.element_exist(i,threshold):
                 return self.choose_pack(i, threshold)
+    
+    def pack_ss(self,floor, threshold=0.8):
+        print(floor)
+        with open("config/" + floor + ".txt", "r") as f:
+            packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
+        for i in packs:
+            if common.element_exist(i,threshold):
+                pass
 
     def choose_pack(self,pack_image, threshold=0.8):
         found = common.match_image(pack_image,threshold)
         x,y = common.random_choice(found)
-        common.mouse_move(x,493)
-        common.mouse_drag(x,900)
+        common.mouse_move(x,common.scale_y(493))
+        common.mouse_drag(x,common.scale_y(900))
         transition_loading()
         return
 
@@ -298,6 +310,9 @@ class Mirror:
         common.sleep(0.5)
         for rewards in encounter_reward:
             if common.element_exist(rewards):
+                pass
+        for rewards in encounter_reward:
+            if common.element_exist(rewards):
                 common.click_matching(rewards)
                 common.click_matching("pictures/general/confirm_b.png")
                 common.sleep(1)
@@ -322,7 +337,7 @@ class Mirror:
         else:
         #Find which node is the traversable one
             for i in node_y:
-                common.mouse_move_click(1083,i)
+                common.mouse_move_click(common.scale_x(1083),common.scale_y(i))
                 common.sleep(1)
                 if common.element_exist("pictures/mirror/general/md_enter.png"):
                     common.key_press("enter")
@@ -372,8 +387,8 @@ class Mirror:
                 if len(market_gifts):
                     for i in market_gifts:
                         x,y = i
-                        self.logger.debug(common.luminence(x+31,y+1))
-                        if common.luminence(x+31,y+1) < 6: #this area will have a value of less than or equal to 5 if purchased
+                        self.logger.debug(common.luminence(x+common.scale_x(31),y+common.scale_y(1)))
+                        if common.luminence(x+common.scale_x(31),y+common.scale_y(1)) < 6: #this area will have a value of less than or equal to 5 if purchased
                             continue
                         if common.element_exist("pictures/mirror/market/small_not.png"):
                             self.logger.debug("MARKET: NOT ENOUGH COST AFTER PURCHASE, EXITING MARKET")
@@ -439,8 +454,8 @@ class Mirror:
     def upgrade(self,status,shift_x,shift_y):
         gifts = common.match_image(status)
         for x,y in gifts:
-            self.logger.debug(common.luminence(x+shift_x,y+shift_y))
-            if common.luminence(x+shift_x,y+shift_y) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
+            self.logger.debug(common.luminence(x+common.scale_x(shift_x),y+common.scale_y(shift_y)))
+            if common.luminence(x+common.scale_x(shift_x),y+common.scale_y(shift_y)) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
                 continue
             common.mouse_move_click(x,y)
             for _ in range(2): #upgrading twice
@@ -487,7 +502,8 @@ class Mirror:
             common.click_matching("pictures/events/select_gain.png")
             #x,y = common.find_skip()
             #common.mouse_move_click(x,y)
-            common.mouse_move_click(901,478)
+            x,y = common.scale_coordinates(901,621)
+            common.mouse_move_click(x,y)
             while(True):
                 common.mouse_click()
                 if common.element_exist("pictures/events/proceed.png"):

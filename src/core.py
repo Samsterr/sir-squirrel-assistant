@@ -73,7 +73,10 @@ def battle():
                     skill_check()
                     break
         if common.element_exist("pictures/battle/winrate.png"):
-            common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
+            #common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
+            x,y = common.scale_coordinates(1624,1007)
+            common.mouse_move_click(x,y)
+            logger.debug("1440P ONSCREEN PROMPT COORDS " + str(x) +","+ str(y))
             common.key_press("p") #win rate keyboard key
             common.key_press("enter") #Battle Start key
         if common.element_exist("pictures/general/server_error.png"):
@@ -94,7 +97,9 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         logger.debug("WOPPILY PT2")
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
-            x,y = common.find_skip()
+            #x,y = common.find_skip()
+            #common.mouse_move_click(x,y)
+            x,y = common.scale_coordinates(895,467)
             common.mouse_move_click(x,y)
             while(not common.element_exist("pictures/events/proceed.png")):
                 if common.element_exist("pictures/events/continue.png"):
@@ -102,7 +107,7 @@ def battle_check(): #pink shoes, woppily, doomsday clock
                     return 0
                 common.mouse_click()
             common.click_matching("pictures/events/proceed.png")
-            x,y = common.find_skip()
+            x,y = common.scale_coordinates(895,467)
             common.mouse_move_click(x,y)
             while(not common.element_exist("pictures/battle/NO.png")):
                 common.mouse_click()
@@ -120,7 +125,7 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         if found:
             x,y = found[0]
             logger.debug("Found Clay Option")
-            if common.luminence(x,y+16) > 24: 
+            if common.luminence(x,y+common.scale_y(16)) > 24: 
                 logger.debug("Offer CLAY USED")
                 common.click_matching("pictures/battle/offer_clay.png")
                 common.wait_skip("pictures/events/continue.png")
@@ -149,6 +154,9 @@ def skill_check():
     common.sleep(1) #for the full list to render
     for i in check_images: #Choose the highest to pass check
         if common.element_exist(i,0.9):
+            pass
+    for i in check_images: #Choose the highest to pass check
+        if common.element_exist(i,0.9):
             common.click_matching(i)
             break
 
@@ -156,7 +164,9 @@ def skill_check():
     common.sleep(4) #Waits for coin tosses
     #x,y = common.find_skip()
     #common.mouse_move_click(x,y)
-    common.mouse_move_click(901,478)
+    x,y = common.scale_coordinates(895,467)
+    common.mouse_move_click(x,y)
+    logger.debug("SKIP BUTTON COORDS: " + str(x) +","+ str(y))
     while(True):
         common.mouse_click()
         if common.element_exist("pictures/events/proceed.png"):
