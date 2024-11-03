@@ -7,6 +7,8 @@ class Mirror:
         self.status = status
         self.logger = logging.getLogger(__name__)
         self.squad_order = self.set_sinner_order(status)
+        self.aspect_ratio = common.get_aspect_ratio()
+        #self.res_x, self.res_y = common.get_resolution()
 
     @staticmethod
     def floor_id():
@@ -126,6 +128,7 @@ class Mirror:
             common.click_skip(4)
 
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
+            self.logger.info("Handling EGO GIFT Prompt")
             common.click_matching("pictures/general/confirm_b.png")
 
         return win_flag,run_complete
@@ -133,12 +136,13 @@ class Mirror:
     def gift_selection(self):
         """selects the ego gift of the same status, fallsback on random if not unlocked"""
         self.logger.info("E.G.O Gift Selection")
-        initial_gift_coords = [420,580,740] #The side bar location for EGO Gifts
+        #initial_gift_coords = [420,580,740] #The side bar location for EGO Gifts
 
         gift = mirror_utils.gift_choice(self.status) or "pictures/mirror/gifts/random.png"
         if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
-            x,y = common.scale_coordinates(320,289)
-            common.mouse_move(x,y)
+            found = common.match_image("pictures/mirror/general/gift_select.png")
+            x,y = found[0]
+            common.mouse_move(x - common.scale_x(1365),y + common.scale_y(50))
             for i in range(5):
                 common.mouse_scroll(-1000)
         
@@ -147,14 +151,18 @@ class Mirror:
             self.status = "random" #Reset the gift to fail the squad selection check
             self.squad_order = self.set_sinner_order("default") #Uses the default squad
 
+        found = common.match_image("pictures/mirror/general/gift_select.png")
+        x,y = found[0]
+        y = y + common.uniform_scale_single(235)
+        initial_gift_coords = [y, y+common.uniform_scale_single(190), y+common.uniform_scale_single(190*2)]
         if self.status == "sinking" or self.status == "slash": #Other 2 gifts better
                initial_gift_coords.pop(0)
         else:
                initial_gift_coords.pop(2)
 
         common.click_matching(gift,0.9) #click on specified
-        common.mouse_move_click(common.scale_x(1230),common.scale_y(initial_gift_coords[0]))
-        common.mouse_move_click(common.scale_x(1230),common.scale_y(initial_gift_coords[1]))
+        common.mouse_move_click(common.uniform_scale_single(1640),initial_gift_coords[0])
+        common.mouse_move_click(common.uniform_scale_single(1640),initial_gift_coords[1])
         common.click_matching("pictures/mirror/general/confirm_gift.png")
         common.key_press("esc")
         common.sleep(1)
@@ -169,14 +177,14 @@ class Mirror:
             self.status = "poise"
             return
         #This is to bring us to the first entry of teams
-        x,y = common.scale_coordinates(247,621)
-        common.mouse_move(x,y)
+        found = common.match_image("pictures/mirror/general/squad_select.png")
+        x,y = found[0]
+        common.mouse_move(x+common.uniform_scale_single(90),y+common.uniform_scale_single(90))
         for i in range(30):
             common.mouse_scroll(1000)
         #scrolls through all the squads in steps to look for the name
         for _ in range(4):
             if common.element_exist(status) is None:
-                common.mouse_move(x,y)
                 for i in range(7):
                     common.mouse_scroll(-1000)
                 common.sleep(1)
@@ -198,11 +206,11 @@ class Mirror:
         self.logger.debug("Current Floor "+ floor)
         found = common.match_image("pictures/mirror/general/refresh.png")
         x,y = found[0]
-        self.logger.debug(common.luminence(x-common.scale_x(3),y))
-        refresh_flag = common.luminence(x-common.scale_x(3),y) < 13
+        self.logger.debug(common.luminence(x,y))
+        refresh_flag = common.luminence(x,y) < 70 #Test
         common.mouse_move(200,200)
         common.sleep(2)
-        self.pack_ss(floor)
+        #TESTING 0.8 on Statuses
         if self.exclusion_detection(floor) and not refresh_flag: #if pack exclusion detected and not refreshed
             self.logger.debug("PACKS: pack exclusion detected, refreshing")
             common.click_matching("pictures/mirror/general/refresh.png")
@@ -213,11 +221,11 @@ class Mirror:
             self.logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
             return self.pack_list(floor)
 
-        if common.element_exist(status, 0.75) and not self.exclusion_detection(floor) and floor != "f4": #if pack exclusion absent and status exists
+        if common.element_exist(status) and not self.exclusion_detection(floor) and floor != "f4": #if pack exclusion absent and status exists
             self.logger.debug("pack exclusion not detected, status detceted, choosing from status")
-            return self.choose_pack(status, 0.75)
+            return self.choose_pack(status)
 
-        if common.element_exist(status,0.75) and self.exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
+        if common.element_exist(status) and self.exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
             self.logger.debug("PACKS: pack exclusion detected, status detected, refreshing")
             common.click_matching("pictures/mirror/general/refresh.png")
             return self.pack_selection()
@@ -231,20 +239,12 @@ class Mirror:
         for i in packs:
             if common.element_exist(i,threshold):
                 return self.choose_pack(i, threshold)
-    
-    def pack_ss(self,floor, threshold=0.8):
-        print(floor)
-        with open("config/" + floor + ".txt", "r") as f:
-            packs = [i.strip() for i in f.readlines()] #uses the f1,f2,f3,f4 txts for floor order
-        for i in packs:
-            if common.element_exist(i,threshold):
-                pass
 
     def choose_pack(self,pack_image, threshold=0.8):
         found = common.match_image(pack_image,threshold)
         x,y = common.random_choice(found)
-        common.mouse_move(x,common.scale_y(493))
-        common.mouse_drag(x,common.scale_y(900))
+        common.mouse_move(x,y-common.uniform_scale_single(350))
+        common.mouse_drag(x,y)
         transition_loading()
         return
 
@@ -266,7 +266,7 @@ class Mirror:
                        "pictures/mirror/packs/f4/yield.png",
                        "pictures/mirror/packs/f4/sloth.png"]
             
-        detected = any(common.element_exist(i, 0.75) for i in exclusion)
+        detected = any(common.element_exist(i) for i in exclusion) #use 0.75 if current has issues
         return int(detected)
 
     def squad_select(self):
@@ -310,9 +310,6 @@ class Mirror:
         common.sleep(0.5)
         for rewards in encounter_reward:
             if common.element_exist(rewards):
-                pass
-        for rewards in encounter_reward:
-            if common.element_exist(rewards):
                 common.click_matching(rewards)
                 common.click_matching("pictures/general/confirm_b.png")
                 common.sleep(1)
@@ -328,8 +325,8 @@ class Mirror:
     def navigation(self):
         """Core navigation function to reach the end of floor"""
         self.logger.info("Navigating")
-        node_y = [455,142,777,615,297] #Middle node is the most occuring so its first
-
+        #node_y = [455,142,777,615,297] #Middle node is the most occuring so its first
+        node_y = [607,189,1036,820,396]
         #Checks incase continuing quitted out MD
         common.click_matching("pictures/mirror/general/danteh.png")
         if common.element_exist("pictures/mirror/general/md_enter.png"):
@@ -337,7 +334,10 @@ class Mirror:
         else:
         #Find which node is the traversable one
             for i in node_y:
-                common.mouse_move_click(common.scale_x(1083),common.scale_y(i))
+                if self.aspect_ratio == "4:3":
+                    common.mouse_move_click(common.uniform_scale_single(1444),common.uniform_scale_single(i) + common.uniform_scale_coordinates(105))
+                else:
+                    common.mouse_move_click(common.uniform_scale_single(1444),common.uniform_scale_single(i))
                 common.sleep(1)
                 if common.element_exist("pictures/mirror/general/md_enter.png"):
                     common.key_press("enter")
@@ -359,11 +359,7 @@ class Mirror:
             common.click_matching("pictures/general/confirm_w.png")
 
         else:
-            #if not common.element_exist("pictures/mirror/reststop/sanity.png") or (common.element_exist("pictures/mirror/reststop/sanity.png")\
-            #and len(common.match_image("pictures/mirror/reststop/sanity.png")) < 12):
-            #    #Click on heal and heal all, then click til the continue prompt shows up
             common.click_matching("pictures/mirror/market/heal.png")
-
             if common.element_exist("pictures/mirror/market/heal_all.png"): #if you cant afford this will not show up so check for it
                 found = common.match_image("pictures/mirror/market/heal_all.png")
                 x,y = found[0]
@@ -378,7 +374,6 @@ class Mirror:
 
             for _ in range(3):
                 market_gifts = []
-
                 if common.element_exist(status):
                     market_gifts += common.match_image(status)
                 #keywordless gifts
@@ -454,8 +449,8 @@ class Mirror:
     def upgrade(self,status,shift_x,shift_y):
         gifts = common.match_image(status)
         for x,y in gifts:
-            self.logger.debug(common.luminence(x+common.scale_x(shift_x),y+common.scale_y(shift_y)))
-            if common.luminence(x+common.scale_x(shift_x),y+common.scale_y(shift_y)) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
+            self.logger.debug(common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)))
+            if common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
                 continue
             common.mouse_move_click(x,y)
             for _ in range(2): #upgrading twice
@@ -477,7 +472,7 @@ class Mirror:
         for _ in range(3):
             common.sleep(1)
             if common.element_exist(status):
-                shift_x, shift_y = mirror_utils.enhance_shift(self.status) or (9, -30)
+                shift_x, shift_y = mirror_utils.enhance_shift(self.status) or (12, -41)
                 self.upgrade(status,shift_x,shift_y)
 
             if common.element_exist("pictures/mirror/reststop/wordless_enhance.png"):
@@ -502,8 +497,7 @@ class Mirror:
             common.click_matching("pictures/events/select_gain.png")
             #x,y = common.find_skip()
             #common.mouse_move_click(x,y)
-            x,y = common.scale_coordinates(901,621)
-            common.mouse_move_click(x,y)
+            common.mouse_move_click(common.scale_x(1193),common.scale_y(623))
             while(True):
                 common.mouse_click()
                 if common.element_exist("pictures/events/proceed.png"):

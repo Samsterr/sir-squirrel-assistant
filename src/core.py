@@ -73,10 +73,8 @@ def battle():
                     skill_check()
                     break
         if common.element_exist("pictures/battle/winrate.png"):
-            #common.mouse_move_click(1624,1007) #handle onscreen prompts example sinking wolf
-            x,y = common.scale_coordinates(1624,1007)
+            x,y = common.uniform_scale_coordinates(2165,1343)
             common.mouse_move_click(x,y)
-            logger.debug("1440P ONSCREEN PROMPT COORDS " + str(x) +","+ str(y))
             common.key_press("p") #win rate keyboard key
             common.key_press("enter") #Battle Start key
         if common.element_exist("pictures/general/server_error.png"):
@@ -85,7 +83,6 @@ def battle():
     
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")
-    
     common.sleep(1)
     if common.element_exist("pictures/battle/investigate.png"): #Woppily
         logger.debug("WOPPILY")
@@ -97,18 +94,14 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         logger.debug("WOPPILY PT2")
         for i in range(3):
             common.click_matching("pictures/battle/NO.png")
-            #x,y = common.find_skip()
-            #common.mouse_move_click(x,y)
-            x,y = common.scale_coordinates(895,467)
-            common.mouse_move_click(x,y)
+            common.mouse_move_click(common.scale_x(1193),common.scale_y(623))
             while(not common.element_exist("pictures/events/proceed.png")):
                 if common.element_exist("pictures/events/continue.png"):
                     common.click_matching("pictures/events/continue.png")
                     return 0
                 common.mouse_click()
             common.click_matching("pictures/events/proceed.png")
-            x,y = common.scale_coordinates(895,467)
-            common.mouse_move_click(x,y)
+            common.mouse_move_click(common.scale_x(1193),common.scale_y(623))
             while(not common.element_exist("pictures/battle/NO.png")):
                 common.mouse_click()
 
@@ -125,7 +118,7 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         if found:
             x,y = found[0]
             logger.debug("Found Clay Option")
-            if common.luminence(x,y+common.scale_y(16)) > 24: 
+            if common.luminence(x,y+common.scale_y(21)) > 24: #Test 1440 Values
                 logger.debug("Offer CLAY USED")
                 common.click_matching("pictures/battle/offer_clay.png")
                 common.wait_skip("pictures/events/continue.png")
@@ -154,19 +147,14 @@ def skill_check():
     common.sleep(1) #for the full list to render
     for i in check_images: #Choose the highest to pass check
         if common.element_exist(i,0.9):
-            pass
-    for i in check_images: #Choose the highest to pass check
-        if common.element_exist(i,0.9):
             common.click_matching(i)
+            logger.debug("Selected Skill Checker")
             break
 
     common.click_matching("pictures/events/commence.png")
     common.sleep(4) #Waits for coin tosses
-    #x,y = common.find_skip()
-    #common.mouse_move_click(x,y)
-    x,y = common.scale_coordinates(895,467)
-    common.mouse_move_click(x,y)
-    logger.debug("SKIP BUTTON COORDS: " + str(x) +","+ str(y))
+    logger.debug("Coin tosses finished")
+    common.mouse_move_click(common.scale_x(1193),common.scale_y(623))
     while(True):
         common.mouse_click()
         if common.element_exist("pictures/events/proceed.png"):
@@ -175,8 +163,10 @@ def skill_check():
         if common.element_exist("pictures/events/continue.png"):
             common.click_matching("pictures/events/continue.png")
             break
+    logger.debug("Finished Skill check")
 
     if common.element_exist("pictures/events/skip.png"):
+        logger.debug("DEBUG: NOON OF VIOLET")
         common.wait_skip("pictures/battle/violet_hp.png")
         common.wait_skip("pictures/events/continue.png")
 
@@ -184,4 +174,4 @@ def skill_check():
         common.sleep(1) #in the event of ego gifts
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"):
             common.click_matching("pictures/general/confirm_b.png")
-        logger.debug("DEBUG: Finished Skill Check")
+            logger.debug("DEBUG: EGO Gift prompt")
