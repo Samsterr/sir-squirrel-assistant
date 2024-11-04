@@ -53,7 +53,7 @@ def reconnect():
         logger.info("COULD NOT RECONNECT TO THE SERVER. SHUTTING DOWN!")
         exit()
     logger.info("Reconnected")
-    
+
 def battle():
     """Handles battles by mashing winrate, also handles skill checks and end of battle loading"""
     logger.info("Starting Battle")
@@ -166,9 +166,13 @@ def skill_check():
     logger.debug("Finished Skill check")
 
     if common.element_exist("pictures/events/skip.png"):
-        logger.debug("DEBUG: NOON OF VIOLET")
-        common.wait_skip("pictures/battle/violet_hp.png")
-        common.wait_skip("pictures/events/continue.png")
+        if common.element_exist("pictures/events/skill_check.png"):#for retry scenarios
+            logger.debug("Failed Skill Check, Retrying")
+            skill_check()
+        if common.element_exist("pictures/battle/violet_hp.png"):
+            logger.debug("DEBUG: NOON OF VIOLET")
+            common.wait_skip("pictures/battle/violet_hp.png")
+            common.wait_skip("pictures/events/continue.png")
 
     else:
         common.sleep(1) #in the event of ego gifts

@@ -1,5 +1,5 @@
 from src import common, mirror_utils
-from src.core import skill_check,reconnect, battle, check_loading, transition_loading,post_run_load
+from src.core import skill_check,reconnect, battle, check_loading, transition_loading,post_run_load, battle_check
 import logging
     
 class Mirror:
@@ -263,8 +263,8 @@ class Mirror:
         if floor == "f4":
             exclusion = ["pictures/mirror/packs/f4/wrath.png",
                        "pictures/mirror/packs/f4/burning.png",
-                       "pictures/mirror/packs/f4/yield.png",
-                       "pictures/mirror/packs/f4/sloth.png"]
+                       "pictures/mirror/packs/f4/yield.png"]
+                       #"pictures/mirror/packs/f4/sloth.png"]
             
         detected = any(common.element_exist(i) for i in exclusion) #use 0.75 if current has issues
         return int(detected)
@@ -530,6 +530,7 @@ class Mirror:
             common.wait_skip("pictures/events/commence_battle.png")
 
         self.special_events()
+        battle_check() #Just incase your pc has a very weird occurence of messing up
 
     def special_events(self):
         if common.element_exist("pictures/mirror/events/kqe.png"):
