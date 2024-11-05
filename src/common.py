@@ -98,8 +98,8 @@ def match_image(template_path, threshold=0.8):
     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 
     # Get locations where the match confidence exceeds the threshold
-    if scale_factor < 0.75:
-        threshold = threshold-0.05 #Testing for detecting on lower scales
+    #if scale_factor < 0.75:
+    #    threshold = threshold-0.05 #Testing for detecting on lower scales
     locations = np.where(result >= threshold)
     boxes = []
 
@@ -154,8 +154,6 @@ def debug_match_image(template_path, threshold=0.8):
     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 
     # Get locations where the match confidence exceeds the threshold
-    if scale_factor < 0.75:
-        threshold = threshold-0.05 #Testing for detecting on lower scales
     locations = np.where(result >= threshold)
     boxes = []
 
@@ -344,7 +342,8 @@ def luminence(x,y):
     """Get Luminence of the pixel and return overall coefficient"""
     screenshot = capture_screen()
     pixel_image = screenshot[y, x]
-    coeff = (pixel_image[0] + pixel_image[1] + pixel_image[2]) / 3
+    coeff = (int(pixel_image[0]) + int(pixel_image[1]) + int(pixel_image[2])) / 3
+    #coeff = (pixel_image[0] + pixel_image[1] + pixel_image[2]) / 3
     return coeff
 
 def error_screenshot():

@@ -8,7 +8,7 @@ class Mirror:
         self.logger = logging.getLogger(__name__)
         self.squad_order = self.set_sinner_order(status)
         self.aspect_ratio = common.get_aspect_ratio()
-        #self.res_x, self.res_y = common.get_resolution()
+        self.res_x, self.res_y = common.get_resolution()
 
     @staticmethod
     def floor_id():
@@ -263,8 +263,8 @@ class Mirror:
         if floor == "f4":
             exclusion = ["pictures/mirror/packs/f4/wrath.png",
                        "pictures/mirror/packs/f4/burning.png",
-                       "pictures/mirror/packs/f4/yield.png"]
-                       #"pictures/mirror/packs/f4/sloth.png"]
+                       "pictures/mirror/packs/f4/yield.png",
+                       "pictures/mirror/packs/f4/sloth.png"]
             
         detected = any(common.element_exist(i) for i in exclusion) #use 0.75 if current has issues
         return int(detected)
@@ -325,7 +325,6 @@ class Mirror:
     def navigation(self):
         """Core navigation function to reach the end of floor"""
         self.logger.info("Navigating")
-        #node_y = [455,142,777,615,297] #Middle node is the most occuring so its first
         node_y = [607,189,1036,820,396]
         #Checks incase continuing quitted out MD
         common.click_matching("pictures/mirror/general/danteh.png")
