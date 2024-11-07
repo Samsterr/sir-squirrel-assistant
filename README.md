@@ -20,12 +20,11 @@ There are already other auto mirror dungeon tools out there so why should you us
     * Sir Squirrel upgrades E.G.O Gifts of the status you chose along with keywordless gifts at rest stops
 * E.G.O Gift Purchase
     * Sir Squirrel purchases E.G.O Gifts according to the status you chose as well as keywordless gifts
+* Resolution Aware
+    * Sir Squirrel now works regardless of resolution
 
 # Planned Features
 These are features i intend to add when i have time for Sir Squirrel development
-* Resolution Awareness
-    * Almost done, mostly missing higher resolution pictures for better scaling and lack of testing on a variety of Resolutions and Aspect Ratios
-
 * Using EGO in battle
     * Shifted to low priority not necessary for now
 
@@ -41,7 +40,7 @@ These are features i intend to add when i have time for Sir Squirrel development
 * Any Suggestions or Enhancements i can make to Sir Squirrel based on feedback that is feasible for development
 
 # Known Issues
-These are the current known issues right now
+Need more feedback pertaining to the Resolution Aware version.
 
 # Bug Reporting
 Please let me know about any issues you face with Sir Squirrel and I will do my best to look into it.
@@ -49,6 +48,7 @@ Please let me know about any issues you face with Sir Squirrel and I will do my 
 For Bug Reports please follow the following format
 * Squirrel Log Output
     * Sir Squirrel logs its actions into a file called Squirrel.log, please provide the output of the log when submitting your issue
+    * Sir Squirrel also takes a screenshot whenever it runs into an issue, this can be found in the folder Error followed by the timestamp
 * Be Descriptive about the issue
     * If you face an issue do let me know at which part did Sir Squirrel fail like which part did it fail at for example, in battle?, marketplace? , reststop?, during an event? and if so what event is it so i can look it up
     * Any accompanying screenshot of what it was stuck on would also be great
@@ -70,11 +70,8 @@ Sir Squirrel was stuck at a skill check for Doomsday clock where it doesn't clic
 Do note that due to the current nature of how Sir Squirrel operates a few things need to be properly set before running it which i will outline here.
 Sir Squirrel also has a keypress combination to stop it forcefully at any point by pressing (CTRL + Q)
 
-1) Sir Squirrel only works for 1920x1080p Resolution. Either Borderless Fullscreen(Recommended) or Windowed
-    * If your native resolution is not 1080P please do not use borderless fullscreen
+1) Sir Squirrel now works with all resolutions. Please run it in borderless windowed
     * To use borderless fullscreen, press Alt+Enter on your keyboard while Limbus Company is in windowed mode.
-    * If you are using windowed mode make sure you double click the Top Bar to make sure the window is scaled and nothing below is blocked
-    * If you are on a higher resolution than 1080P, you can still use sir squirrel. Just simply change the resolution to windowed 1080p and move the window such that the top left corner is at the top left of your monitor
 
 3) Edit the files in the config folder before running
     * Although i have already prefilled the files, i still recommend you make edits tailoured towards your own teams
@@ -185,14 +182,7 @@ The order for the pack is top to bottom. You can reference which packs contain w
 
 
 3) Running the Bot
-* Follow the pictures on how to run the bot. Make sure limbus company is running either borderless or windowed as explained above and is at the home menu screen where the bar is present
-
-Correct Windowed Mode
-![Correct](/img/proper_window.png)
-Incorrect Windowed Mode
-![Incorrect](/img/improper_window.png)
-
-
+* Follow the pictures on how to run the bot. Make sure limbus company is running in borderless windowed as explained above and is at the home menu screen where the bar is present
 
 Firstly Navigate to where you unzipped Sir Squirrel where sirsquirrel.exe is at, followed by clicking the top of the bar (Example is for Windows 11 but its the same for Windows 10)
 
