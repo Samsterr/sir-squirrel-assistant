@@ -3,7 +3,7 @@ import logging
 import os
 import threading
 import keyboard  # Import the keyboard module
-from src import core, mirror
+from src import core, mirror,common
 
 with open("config/status_selection.txt", "r") as f:
     status = [i.strip().lower() for i in f.readlines()]
@@ -24,26 +24,31 @@ exit_listener_thread = threading.Thread(target=start_exit_listener, daemon=True)
 exit_listener_thread.start()
 
 def mirror_dungeon_run(num_runs, logger):
-    run_count = 0
-    win_count = 0
-    lose_count = 0
-    status_list = (status * ((num_runs // len(status)) + 1))[:num_runs]
-    logger.info("Starting Run")
-    for i in range(num_runs):
-        logger.info("Run {}".format(run_count + 1))
-        core.md_setup()
-        logger.info("Current Team: "+status_list[i])
-        run_complete = 0
-        MD = mirror.Mirror(status_list[i])
-        while(run_complete != 1):
-            win_flag, run_complete = MD.start_mirror()
-        if win_flag == 1:
-            win_count += 1
-        else:
-            lose_count += 1
-        run_count += 1
-        
-    logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
+    try:
+        run_count = 0
+        win_count = 0
+        lose_count = 0
+        status_list = (status * ((num_runs // len(status)) + 1))[:num_runs]
+        logger.info("Starting Run")
+        for i in range(num_runs):
+            logger.info("Run {}".format(run_count + 1))
+            core.pre_md_setup()
+            logger.info("Current Team: "+status_list[i])
+            run_complete = 0
+            MD = mirror.Mirror(status_list[i])
+            MD.setup_mirror()
+            while(run_complete != 1):
+                win_flag, run_complete = MD.mirror_loop()
+            if win_flag == 1:
+                win_count += 1
+            else:
+                lose_count += 1
+            run_count += 1
+
+        logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
+    except Exception as e:
+        common.error_screenshot()
+        logger.error(e)
 
 def main():
     logging.basicConfig(

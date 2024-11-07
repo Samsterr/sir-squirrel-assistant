@@ -141,24 +141,24 @@ def market_choice(status):
 def enhance_shift(status):
     match status:
         case "sinking":
-            return (7,-26)
+            return (11,-35)
         case "bleed":
-            return (8,-26)
+            return (12,-36)
         case "burn":
-            return (10,-37)
+            return (13,-49)
         case "charge":
-            return (9,-32)       
+            return (12,-44)
         case "poise":
-            return (9,-30)
+            return (12,-41)
         case "rupture":
-            return (9,-31)
+            return (12,-41)
         case "tremor":
-            return (11,-33)
+            return (14,-45)
         case "slash":
-            return (13,-35)
+            return (15,-48)
         case "pierce":
-            return (13,-35)
+            return (16,-46)
         case "blunt":
-            return (8,-34)
+            return (10,-48)
         case "wordless":
-            return (6,-38)
+            return (11,-54)

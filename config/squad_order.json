@@ -126,18 +126,18 @@
         "gregor": 3
     },
     "blunt": {
-        "yisang": 8,
+        "yisang": 11,
         "faust": 5,
-        "donquixote": 7,
-        "ryoshu": 6,
-        "meursault": 2,
-        "honglu": 1,
-        "heathcliff": 3,
-        "ishmael": 4,
-        "rodion": 9,
-        "sinclair": 10,
-        "outis": 11,
-        "gregor": 12
+        "donquixote": 12,
+        "ryoshu": 3,
+        "meursault": 6,
+        "honglu": 7,
+        "heathcliff": 8,
+        "ishmael": 9,
+        "rodion": 2,
+        "sinclair": 1,
+        "outis": 4,
+        "gregor": 10
     },
     "default": {
         "yisang": 1,
