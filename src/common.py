@@ -343,7 +343,6 @@ def luminence(x,y):
     screenshot = capture_screen()
     pixel_image = screenshot[y, x]
     coeff = (int(pixel_image[0]) + int(pixel_image[1]) + int(pixel_image[2])) / 3
-    #coeff = (pixel_image[0] + pixel_image[1] + pixel_image[2]) / 3
     return coeff
 
 def error_screenshot():

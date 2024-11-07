@@ -18,7 +18,7 @@ def navigate_to_md():
     common.click_matching("pictures/general/drive.png")
     common.click_matching("pictures/general/MD.png")
 
-def md_setup():
+def pre_md_setup():
     if common.element_exist("pictures/mirror/general/md.png"):
         return
     else:

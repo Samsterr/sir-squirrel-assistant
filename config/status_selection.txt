@@ -1,10 +1,10 @@
+bleed
+poise
+tremor
+charge
 sinking
 burn
 rupture
-tremor
-charge
-poise
-bleed
 slash
-blunt
 pierce
+blunt

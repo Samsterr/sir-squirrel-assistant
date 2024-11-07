@@ -32,9 +32,7 @@ class Mirror:
         else:
             return common.squad_order(status)
 
-    def start_mirror(self):
-        run_complete = 0
-        win_flag = 0
+    def setup_mirror(self):
         """Main Mirror Logic of identifying and running the specified function"""
         if common.element_exist("pictures/mirror/general/in_progress.png"): #check if MD is in Progress
             common.click_matching("pictures/mirror/general/in_progress.png")
@@ -51,14 +49,6 @@ class Mirror:
                 common.click_matching("pictures/general/confirm_b.png")
                 self.logger.info("Starting Run")
 
-        if common.element_exist("pictures/general/maint.png"):
-            common.click_matching("pictures/general/close.png")
-            common.sleep(0.5)
-            common.click_matching("pictures/general/no_op.png")
-            common.click_matching("pictures/general/close.png")
-            self.logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
-            exit()
-
         if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
             self.logger.info("Existing Run Detected")
             if common.element_exist("pictures/mirror/general/clear.png"):
@@ -73,39 +63,37 @@ class Mirror:
                 self.logger.info("Run Not Cleared, Giving Up")
                 common.click_matching("pictures/general/give_up.png")
                 common.click_matching("pictures/general/cancel.png")
-
-        if common.element_exist("pictures/general/defeat.png"):
-            self.defeat()
-            run_complete = 1
-            win_flag = 0
-            return win_flag,run_complete
-
-        if common.element_exist("pictures/general/victory.png"):
-            self.victory()
-            run_complete = 1
-            win_flag = 1
-            return win_flag,run_complete
         
-        if common.element_exist("pictures/general/server_error.png"):
-            reconnect()
-
         if common.element_exist("pictures/mirror/general/gift_select.png"): #Checks if in gift select
             self.gift_selection()
 
         if common.element_exist("pictures/mirror/general/squad_select.png"): #checks if in Squad select
             self.initial_squad_selection()
 
-        if common.element_exist("pictures/mirror/general/inpack.png"): #checks if in pack select
-            self.pack_selection()
+    
+    def check_run(self):
+        run_complete = 0
+        win_flag = 0
+        if common.element_exist("pictures/general/defeat.png"):
+            self.defeat()
+            run_complete = 1
+            win_flag = 0
 
+        if common.element_exist("pictures/general/victory.png"):
+            self.victory()
+            run_complete = 1
+            win_flag = 1
+
+        return win_flag,run_complete
+
+    def mirror_loop(self):
         if common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
             self.navigation()
 
-        if common.element_exist("pictures/battle/clear.png"): #checks if in squad select and then proceeds with battle
-            self.squad_select()
-
-        if common.element_exist("pictures/battle/winrate.png"):
-            battle()
+        if common.element_exist("pictures/events/skip.png"): #if hitting the events click skip to determine which is it
+            self.logger.info("Entered ? node")
+            common.mouse_move(200,200)
+            common.click_skip(4)
 
         if common.element_exist("pictures/mirror/general/event.png"):
             self.event_choice()
@@ -116,22 +104,37 @@ class Mirror:
         if common.element_exist("pictures/mirror/market/sell_gifts.png"): #checks if in market
             self.market_shopping()
 
+        if common.element_exist("pictures/battle/clear.png"): #checks if in squad select and then proceeds with battle
+            self.squad_select()
+
+        if common.element_exist("pictures/battle/winrate.png"):
+            battle()
+
         if common.element_exist("pictures/mirror/general/reward_select.png"): #checks if in reward select
             self.reward_select()
 
         if common.element_exist("pictures/mirror/general/encounter_reward.png"): #checks if in encounter rewards
-            self.encounter_reward_select()
+            self.encounter_reward_select()            
 
-        if common.element_exist("pictures/events/skip.png"): #if hitting the events click skip to determine which is it
-            self.logger.info("Entered ? node")
-            common.mouse_move(200,200)
-            common.click_skip(4)
+        if common.element_exist("pictures/mirror/general/inpack.png"): #checks if in pack select
+            self.pack_selection()
+
+        if common.element_exist("pictures/general/server_error.png"):
+            reconnect()
 
         if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
             self.logger.info("Handling EGO GIFT Prompt")
             common.click_matching("pictures/general/confirm_b.png")
 
-        return win_flag,run_complete
+        if common.element_exist("pictures/general/maint.png"):
+            common.click_matching("pictures/general/close.png")
+            common.sleep(0.5)
+            common.click_matching("pictures/general/no_op.png")
+            common.click_matching("pictures/general/close.png")
+            self.logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
+            exit()
+
+        return self.check_run()
 
     def gift_selection(self):
         """selects the ego gift of the same status, fallsback on random if not unlocked"""

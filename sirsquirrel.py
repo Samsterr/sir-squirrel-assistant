@@ -32,12 +32,13 @@ def mirror_dungeon_run(num_runs, logger):
         logger.info("Starting Run")
         for i in range(num_runs):
             logger.info("Run {}".format(run_count + 1))
-            core.md_setup()
+            core.pre_md_setup()
             logger.info("Current Team: "+status_list[i])
             run_complete = 0
             MD = mirror.Mirror(status_list[i])
+            MD.setup_mirror()
             while(run_complete != 1):
-                win_flag, run_complete = MD.start_mirror()
+                win_flag, run_complete = MD.mirror_loop()
             if win_flag == 1:
                 win_count += 1
             else:
