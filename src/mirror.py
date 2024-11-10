@@ -151,8 +151,8 @@ class Mirror:
         
         if common.element_exist(gift,0.9) is None: # i forgot to check again if it is not found
             gift = "pictures/mirror/gifts/random.png"
-            self.status = "random" #Reset the gift to fail the squad selection check
-            self.squad_order = self.set_sinner_order("default") #Uses the default squad
+            #self.status = "random" #Reset the gift to fail the squad selection check
+            #self.squad_order = self.set_sinner_order("default") #Uses the default squad
 
         found = common.match_image("pictures/mirror/general/gift_select.png")
         x,y = found[0]
@@ -167,9 +167,9 @@ class Mirror:
         common.mouse_move_click(common.uniform_scale_single(1640),initial_gift_coords[0])
         common.mouse_move_click(common.uniform_scale_single(1640),initial_gift_coords[1])
         common.click_matching("pictures/mirror/general/confirm_gift.png")
-        common.key_press("esc")
+        common.key_press("enter")
         common.sleep(1)
-        common.key_press("esc")
+        common.key_press("enter")
 
     def initial_squad_selection(self):
         """Searches for the squad name with the status type, if not found then uses the current squad"""
