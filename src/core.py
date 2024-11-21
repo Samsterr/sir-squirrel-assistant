@@ -11,11 +11,19 @@ def refill_enkephalin():
     common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/cancel.png")
 
+#def navigate_to_md():
+#    """Navigates to the Mirror Dungeon from the menu"""
+#    logger.info("Navigating to Mirror Dungeon")
+#    common.click_matching("pictures/general/window.png")
+#    common.click_matching("pictures/general/drive.png")
+#    common.click_matching("pictures/general/MD.png")
+
 def navigate_to_md():
     """Navigates to the Mirror Dungeon from the menu"""
     logger.info("Navigating to Mirror Dungeon")
-    common.click_matching("pictures/general/window.png")
-    common.click_matching("pictures/general/drive.png")
+    while(not common.element_exist("pictures/general/MD.png")):
+        common.click_matching("pictures/general/window.png")
+        common.click_matching("pictures/general/drive.png")
     common.click_matching("pictures/general/MD.png")
 
 def pre_md_setup():
@@ -118,6 +126,7 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         if found:
             x,y = found[0]
             logger.debug("Found Clay Option")
+            logger.debug(common.luminence(x,y+common.scale_y(21)))
             if common.luminence(x,y+common.scale_y(21)) > 24: #Test 1440 Values
                 logger.debug("Offer CLAY USED")
                 common.click_matching("pictures/battle/offer_clay.png")

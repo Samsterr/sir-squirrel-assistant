@@ -98,8 +98,8 @@ def match_image(template_path, threshold=0.8):
     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
 
     # Get locations where the match confidence exceeds the threshold
-    #if scale_factor < 0.75:
-    #    threshold = threshold-0.05 #Testing for detecting on lower scales
+    if scale_factor < 0.75:
+        threshold = threshold-0.05 #Testing for detecting on lower scales
     locations = np.where(result >= threshold)
     boxes = []
 
@@ -297,7 +297,7 @@ def click_matching(image_path,threshold=0.8):
         if found:
             x,y = found[0]
             mouse_move_click(x,y)
-            time.sleep(1)
+            time.sleep(0.5)
         else:
             mouse_move(200,200)
             click_matching(image_path,threshold)

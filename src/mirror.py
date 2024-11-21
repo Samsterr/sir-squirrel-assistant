@@ -267,7 +267,8 @@ class Mirror:
             exclusion = ["pictures/mirror/packs/f4/wrath.png",
                        "pictures/mirror/packs/f4/burning.png",
                        "pictures/mirror/packs/f4/yield.png",
-                       "pictures/mirror/packs/f4/sloth.png"]
+                       "pictures/mirror/packs/f4/sloth.png",
+                       "pictures/mirror/packs/f4/crawling.png"]
             
         detected = any(common.element_exist(i) for i in exclusion) #use 0.75 if current has issues
         return int(detected)
@@ -431,10 +432,8 @@ class Mirror:
                     common.click_matching("pictures/mirror/reststop/back.png")#unsuccessful heal 
                 else:
                     common.click_matching("pictures/mirror/reststop/heal_all.png") #This is to check for successful healing
-                    common.click_skip(3)
-                    if common.element_exist("pictures/events/continue.png"): #successful heal
-                        self.logger.debug("REST STOP: HEALING ALL SINNERS")
-                        common.click_matching("pictures/events/continue.png")
+                    self.logger.debug("REST STOP: HEALING ALL SINNERS")
+                    common.wait_skip("pictures/events/continue.png")
 
             common.click_matching("pictures/mirror/reststop/enhance.png")
             self.logger.debug("REST STOP: ENHANCING EGO GIFTS")
