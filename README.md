@@ -3,6 +3,8 @@ Sir Squirrel Assistant is a helpful tool for the game Limbus Company by Project 
 
 Do note that this has not yet been updated for Mirror Dungeon 5, but it should work regardless provided Project Moon does not greatly change Mirror Dungeon. Sir Squirrel will hit Version 1.0 when i have finished up all the work to make it compatible for Mirror Dungeon 5
 
+UPDATE 22/11/2024: Due to the proposed changes for MD5, i will take quite awhile to update sirsquirrel so please be patient
+
 # Features
 There are already other auto mirror dungeon tools out there so why should you use Sir Squirrel instead. Well here's why
 * E.G.O Gift Choice
