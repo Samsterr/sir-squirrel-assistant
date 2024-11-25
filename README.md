@@ -5,6 +5,7 @@ Do note that this has not yet been updated for Mirror Dungeon 5, but it should w
 
 UPDATE 22/11/2024: Due to the proposed changes for MD5, i will take quite awhile to update sirsquirrel so please be patient
 I will also list here the things that need fixing so you can have a rough update
+
 Added on 28/11 Update
 - [ ] MD5 Setup
 - [ ] New Theme Packs
@@ -16,6 +17,7 @@ Added on 28/11 Update
 - [ ] Pack Exclusions
 - [ ] Duplicate EGO Gifts
 - [ ] Market / Reststop Combined
+
 Added on 5/12 Update
 - [ ] New Choice Events
 - [ ] ???
