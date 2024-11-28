@@ -7,14 +7,14 @@ UPDATE 22/11/2024: Due to the proposed changes for MD5, i will take quite awhile
 I will also list here the things that need fixing so you can have a rough update
 
 Added on 28/11 Update
-- [ ] MD5 Setup
-- [ ] New Theme Packs
+- [X] MD5 Setup
+- [X] New Theme Packs
 - [ ] Grace of the Dreaming Star
-- [ ] EGO Gift Selection (Slash, Pierce, Blunt Removed)
-- [ ] Pack Selection (3 Refreshes now instead of 1)
-- [ ] Reward Selection (No Starlight)
-- [ ] Abnormality Battles
-- [ ] Pack Exclusions
+- [X] EGO Gift Selection (Slash, Pierce, Blunt Removed)
+- [X] Pack Selection (3 Refreshes now instead of 1)
+- [X] Reward Selection (No Starlight)
+- [X] Abnormality Battles
+- [X] Pack Exclusions
 - [ ] Duplicate EGO Gifts
 - [ ] Market / Reststop Combined
 
