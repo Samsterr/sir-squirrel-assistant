@@ -1,14 +1,8 @@
-pictures/mirror/packs/f4/dizzying.png
 pictures/mirror/packs/f4/gluttony.png
-pictures/mirror/packs/f4/envy.png
 pictures/mirror/packs/f4/lust.png
 pictures/mirror/packs/f4/gloom.png
-pictures/mirror/packs/f4/sigh.png
-pictures/mirror/packs/f4/rising.png
-pictures/mirror/packs/f4/sinking.png
+pictures/mirror/packs/f4/miracle.png
+pictures/mirror/packs/f4/envy.png
 pictures/mirror/packs/f4/warp.png
 pictures/mirror/packs/f4/tearful.png
-pictures/mirror/packs/f4/crushing.png
-pictures/mirror/packs/f4/sanguine.png
 pictures/mirror/packs/f4/time.png
-pictures/mirror/packs/f4/pride.png

@@ -72,25 +72,25 @@ def pack_choice(status):
 def enhance_gift_choice(status):
     match status:
         case "sinking":
-            return "pictures/mirror/reststop/sinking_enhance.png"
+            return "pictures/mirror/restshop/enhance/sinking_enhance.png"
         case "bleed":
-            return "pictures/mirror/reststop/bleed_enhance.png"
+            return "pictures/mirror/restshop/enhance/bleed_enhance.png"
         case "burn":
-            return "pictures/mirror/reststop/burn_enhance.png"
+            return "pictures/mirror/restshop/enhance/burn_enhance.png"
         case "charge":
-            return "pictures/mirror/reststop/charge_enhance.png"        
+            return "pictures/mirror/restshop/enhance/charge_enhance.png"        
         case "poise":
-            return "pictures/mirror/reststop/poise_enhance.png"
+            return "pictures/mirror/restshop/enhance/poise_enhance.png"
         case "rupture":
-            return "pictures/mirror/reststop/rupture_enhance.png"
+            return "pictures/mirror/restshop/enhance/rupture_enhance.png"
         case "tremor":
-            return "pictures/mirror/reststop/tremor_enhance.png"
+            return "pictures/mirror/restshop/enhance/tremor_enhance.png"
         case "slash":
-            return "pictures/mirror/reststop/slash_enhance.png"
+            return "pictures/mirror/restshop/enhance/slash_enhance.png"
         case "pierce":
-            return "pictures/mirror/reststop/pierce_enhance.png"
+            return "pictures/mirror/restshop/enhance/pierce_enhance.png"
         case "blunt":
-            return "pictures/mirror/reststop/blunt_enhance.png"
+            return "pictures/mirror/restshop/enhance/blunt_enhance.png"
         
 def reward_choice(status):
     match status:
@@ -118,25 +118,40 @@ def reward_choice(status):
 def market_choice(status):
     match status:
         case "sinking":
-            return "pictures/mirror/market/sinking_market.png"
+            return "pictures/mirror/restshop/market/sinking_market.png"
         case "bleed":
-            return "pictures/mirror/market/bleed_market.png"
+            return "pictures/mirror/restshop/market/bleed_market.png"
         case "burn":
-            return "pictures/mirror/market/burn_market.png"
+            return "pictures/mirror/restshop/market/burn_market.png"
         case "charge":
-            return "pictures/mirror/market/charge_market.png"        
+            return "pictures/mirror/restshop/market/charge_market.png"        
         case "poise":
-            return "pictures/mirror/market/poise_market.png"
+            return "pictures/mirror/restshop/market/poise_market.png"
         case "rupture":
-            return "pictures/mirror/market/rupture_market.png"
+            return "pictures/mirror/restshop/market/rupture_market.png"
         case "tremor":
-            return "pictures/mirror/market/tremor_market.png"
+            return "pictures/mirror/restshop/market/tremor_market.png"
         case "slash":
-            return "pictures/mirror/market/slash_market.png"
+            return "pictures/mirror/restshop/market/slash_market.png"
         case "pierce":
-            return "pictures/mirror/market/pierce_market.png"
+            return "pictures/mirror/restshop/market/pierce_market.png"
         case "blunt":
-            return "pictures/mirror/market/blunt_market.png"
+            return "pictures/mirror/restshop/market/blunt_market.png"
+
+def grace_choice(grace):
+    match grace:
+        case 1:
+            return "pictures/mirror/grace/10.png"
+        case 2:
+            return "pictures/mirror/grace/20.png"
+        case 3:
+            return "pictures/mirror/grace/30.png"
+        case 4:
+            return "pictures/mirror/grace/40.png"
+        case 5:
+            return "pictures/mirror/grace/50.png"
+        case 6:
+            return "pictures/mirror/grace/60.png"
         
 def enhance_shift(status):
     match status:

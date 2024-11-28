@@ -83,8 +83,10 @@ def battle():
         if common.element_exist("pictures/battle/winrate.png"):
             x,y = common.uniform_scale_coordinates(2165,1343)
             common.mouse_move_click(x,y)
-            common.key_press("p") #win rate keyboard key
-            common.key_press("enter") #Battle Start key
+            #common.key_press("p") #win rate keyboard key
+            #common.key_press("enter") #Battle Start key
+            common.click_matching("pictures/battle/winrate.png")
+            common.click_matching("pictures/battle/start.png")
         if common.element_exist("pictures/general/server_error.png"):
             logger.info("Lost Connection to Server, Reconnecting")
             reconnect()
