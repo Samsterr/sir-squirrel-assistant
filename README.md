@@ -9,14 +9,14 @@ I will also list here the things that need fixing so you can have a rough update
 Added on 28/11 Update
 - [X] MD5 Setup
 - [X] New Theme Packs
-- [ ] Grace of the Dreaming Star
+- [X] Grace of the Dreaming Star
 - [X] EGO Gift Selection (Slash, Pierce, Blunt Removed)
 - [X] Pack Selection (3 Refreshes now instead of 1)
 - [X] Reward Selection (No Starlight)
 - [X] Abnormality Battles
 - [X] Pack Exclusions
-- [ ] Duplicate EGO Gifts
-- [ ] Market / Reststop Combined
+- [X] Duplicate EGO Gifts
+- [X] Market / Reststop Combined
 
 Added on 5/12 Update
 - [ ] New Choice Events
