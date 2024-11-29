@@ -153,6 +153,40 @@ def grace_choice(grace):
         case 6:
             return "pictures/mirror/grace/60.png"
         
+def fusion_choice(status):
+    match status:
+        case "sinking":
+            return "pictures/mirror/restshop/fusion/sinking_fusion.png"
+        case "bleed":
+            return "pictures/mirror/restshop/fusion/bleed_fusion.png"
+        case "burn":
+            return "pictures/mirror/restshop/fusion/burn_fusion.png"
+        case "charge":
+            return "pictures/mirror/restshop/fusion/charge_fusion.png"
+        case "poise":
+            return "pictures/mirror/restshop/fusion/poise_fusion.png"
+        case "rupture":
+            return "pictures/mirror/restshop/fusion/rupture_fusion.png"
+        case "tremor":
+            return "pictures/mirror/restshop/fusion/tremor_fusion.png"
+        
+def fusion_choice_small(status):
+    match status:
+        case "sinking":
+            return "pictures/mirror/restshop/fusion/sinking_fusion_s.png"
+        case "bleed":
+            return "pictures/mirror/restshop/fusion/bleed_fusion_s.png"
+        case "burn":
+            return "pictures/mirror/restshop/fusion/burn_fusion_s.png"
+        case "charge":
+            return "pictures/mirror/restshop/fusion/charge_fusion_s.png"
+        case "poise":
+            return "pictures/mirror/restshop/fusion/poise_fusion_s.png"
+        case "rupture":
+            return "pictures/mirror/restshop/fusion/rupture_fusion_s.png"
+        case "tremor":
+            return "pictures/mirror/restshop/fusion/tremor_fusion_s.png"
+        
 def enhance_shift(status):
     match status:
         case "sinking":

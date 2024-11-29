@@ -1,7 +1,7 @@
-bleed
-poise
-rupture
 sinking
 burn
 tremor
 charge
+bleed
+poise
+rupture

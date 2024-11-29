@@ -125,7 +125,7 @@ def match_image(template_path, threshold=0.8):
     
     if found_elements:
         #save_match_screenshot(screenshot, (x1, y1), (x2, y2), template_path, match_index)
-        return found_elements
+        return sorted(found_elements)
     # Return the list of center coordinates of all found elements or None if no elements found
     return None
 
