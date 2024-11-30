@@ -149,9 +149,11 @@ class Mirror:
         self.logger.info("Selected Grace Blessing")
         common.click_matching("pictures/mirror/general/enter_b.png")
         self.logger.info("Confirming Grace")
-        common.sleep(0.5)
+        common.sleep(1)
         common.click_matching("pictures/general/confirm_b.png")
         self.logger.info("Confirmed Grace")
+        while(not common.element_exist("pictures/mirror/general/gift_select.png")): #Mitigate the weird freeze
+            common.sleep(0.5)
     
     def gift_selection(self):
         """selects the ego gift of the same status, fallsback on random if not unlocked"""
@@ -189,7 +191,8 @@ class Mirror:
         self.logger.info("Mirror Dungeon Squad Select")
         status = mirror_utils.squad_choice(self.status)
         if status is None:
-            common.key_press("enter")
+            #common.key_press("enter")
+            common.click_matching("pictures/squads/confirm_squad.png")
             self.status = "poise"
             return
         #This is to bring us to the first entry of teams
@@ -211,7 +214,8 @@ class Mirror:
             else:
                 common.click_matching(status)
                 break
-        common.key_press("enter")
+        #common.key_press("enter")
+        common.click_matching("pictures/squads/confirm_squad.png")
         common.sleep(1) #Transitional to Grace of Dreams
 
     def pack_selection(self):

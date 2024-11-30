@@ -128,8 +128,8 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         if found:
             x,y = found[0]
             logger.debug("Found Clay Option")
-            logger.debug(common.luminence(x,y+common.scale_y(21)))
-            if common.luminence(x,y+common.scale_y(21)) > 24: #Test 1440 Values
+            logger.debug(common.luminence(x,y-common.uniform_scale_single(72)))
+            if common.luminence(x,y-common.uniform_scale_single(72)) < 195:
                 logger.debug("Offer CLAY USED")
                 common.click_matching("pictures/battle/offer_clay.png")
                 common.wait_skip("pictures/events/continue.png")
