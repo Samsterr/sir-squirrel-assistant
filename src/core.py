@@ -68,10 +68,12 @@ def battle():
     battle_finished = 0
     while(battle_finished != 1):
         if common.element_exist("pictures/general/loading.png"): #Checks for loading screen to end the while loop
+            common.mouse_up()
             logger.info("Loading")
             battle_finished = 1
             common.sleep(3)
         if common.element_exist("pictures/events/skip.png"): #Checks for special battle skill checks prompt then calls skill check functions
+            common.mouse_up()
             while(True):
                 common.click_skip(1)
                 if common.element_exist("pictures/mirror/general/event.png"):
@@ -81,15 +83,55 @@ def battle():
                     skill_check()
                     break
         if common.element_exist("pictures/battle/winrate.png"):
+            common.mouse_up()
             x,y = common.uniform_scale_coordinates(2165,1343)
             common.mouse_move_click(x,y)
             #common.key_press("p") #win rate keyboard key
             #common.key_press("enter") #Battle Start key
+            found = common.match_image("pictures/battle/winrate.png")
+            x,y = found[0]
             common.click_matching("pictures/battle/winrate.png")
-            common.click_matching("pictures/battle/start.png")
+            ego_check()
+            common.mouse_move_click(x-common.scale_x(181),y)
+            #common.click_matching("pictures/battle/start.png")
+            common.mouse_down()
         if common.element_exist("pictures/general/server_error.png"):
+            common.mouse_up()
             logger.info("Lost Connection to Server, Reconnecting")
             reconnect()
+
+def ego_check():
+    bad_clashes = []
+    usable_ego = []
+    if common.element_exist("pictures/battle/ego/hopeless.png",0.79):
+        bad_clashes += common.match_image("pictures/battle/ego/hopeless.png",0.79)
+        logger.debug("HOPELESS FOUND")
+    if common.element_exist("pictures/battle/ego/struggling.png",0.79):
+        bad_clashes += common.match_image("pictures/battle/ego/struggling.png",0.79)
+        logger.debug("STRUGGLING FOUND")
+    if len(bad_clashes):
+        logger.debug("BAD CLASHES FOUND")
+        for x,y in bad_clashes:
+            common.mouse_move(x-common.scale_x(30),y+common.scale_y(100))
+            common.mouse_hold()
+            egos = common.match_image("pictures/battle/ego/sanity.png")
+            for i in egos:
+                x,y = i
+                if common.luminence(x,y) > 100:
+                    usable_ego.append(i)
+            if len(usable_ego):
+                logger.debug("EGO USABLE")
+                ego = common.random_choice(usable_ego)
+                x,y = ego
+                for _ in range(2):
+                    common.mouse_move_click(x,y)
+            else:
+                logger.debug("EGO UNUSABLE")
+                common.mouse_move_click(200,200)
+        common.click_matching("pictures/battle/winrate.png")
+        common.mouse_move(200,200)
+        common.click_matching("pictures/battle/winrate.png")
+    return
     
 def battle_check(): #pink shoes, woppily, doomsday clock
     logger.info("Battle Event Check")

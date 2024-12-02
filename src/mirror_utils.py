@@ -170,23 +170,6 @@ def fusion_choice(status):
         case "tremor":
             return "pictures/mirror/restshop/fusion/tremor_fusion.png"
         
-def fusion_choice_small(status):
-    match status:
-        case "sinking":
-            return "pictures/mirror/restshop/fusion/sinking_fusion_s.png"
-        case "bleed":
-            return "pictures/mirror/restshop/fusion/bleed_fusion_s.png"
-        case "burn":
-            return "pictures/mirror/restshop/fusion/burn_fusion_s.png"
-        case "charge":
-            return "pictures/mirror/restshop/fusion/charge_fusion_s.png"
-        case "poise":
-            return "pictures/mirror/restshop/fusion/poise_fusion_s.png"
-        case "rupture":
-            return "pictures/mirror/restshop/fusion/rupture_fusion_s.png"
-        case "tremor":
-            return "pictures/mirror/restshop/fusion/tremor_fusion_s.png"
-        
 def enhance_shift(status):
     match status:
         case "sinking":
@@ -196,13 +179,13 @@ def enhance_shift(status):
         case "burn":
             return (13,-49)
         case "charge":
-            return (12,-44)
+            return (16,-44)
         case "poise":
             return (12,-41)
         case "rupture":
             return (12,-41)
         case "tremor":
-            return (14,-45)
+            return (18,-45)
         case "slash":
             return (15,-48)
         case "pierce":

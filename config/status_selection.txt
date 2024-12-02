@@ -1,7 +1,7 @@
-sinking
-burn
-tremor
 charge
 bleed
 poise
+sinking
+burn
 rupture
+tremor

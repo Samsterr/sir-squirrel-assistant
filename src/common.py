@@ -28,6 +28,17 @@ def mouse_click():
     """Performs a left click on the current position"""
     pyautogui.click()
 
+def mouse_hold():
+    pyautogui.mouseDown()
+    sleep(2)
+    pyautogui.mouseUp()
+
+def mouse_down():
+    pyautogui.mouseDown()
+
+def mouse_up():
+    pyautogui.mouseUp()
+
 def mouse_move_click(x,y):
     """Moves the mouse to the X,Y coordinate specified and performs a left click"""
     pyautogui.click(x,y)
@@ -346,6 +357,7 @@ def luminence(x,y):
     return coeff
 
 def error_screenshot():
+    os.makedirs("error", exist_ok=True)
     with mss() as sct:
         # Dynamically get the current screen resolution
         monitor = sct.monitors[1]  # [1] is the primary monitor; adjust if using multiple monitors
