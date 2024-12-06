@@ -1,27 +1,6 @@
 # Sir Squirrel Assistant
 Sir Squirrel Assistant is a helpful tool for the game Limbus Company by Project Moon. No longer will you need to hit the mines as Sir Squirrel will do it for you.
 
-Do note that this has not yet been updated for Mirror Dungeon 5, but it should work regardless provided Project Moon does not greatly change Mirror Dungeon. Sir Squirrel will hit Version 1.0 when i have finished up all the work to make it compatible for Mirror Dungeon 5
-
-UPDATE 22/11/2024: Due to the proposed changes for MD5, i will take quite awhile to update sirsquirrel so please be patient
-I will also list here the things that need fixing so you can have a rough update
-
-Added on 28/11 Update
-- [X] MD5 Setup
-- [X] New Theme Packs
-- [X] Grace of the Dreaming Star
-- [X] EGO Gift Selection (Slash, Pierce, Blunt Removed)
-- [X] Pack Selection (3 Refreshes now instead of 1)
-- [X] Reward Selection (No Starlight)
-- [X] Abnormality Battles
-- [X] Pack Exclusions
-- [X] Duplicate EGO Gifts
-- [X] Market / Reststop Combined
-
-Added on 5/12 Update
-- [ ] New Choice Events
-- [ ] ???
-
 # Features
 There are already other auto mirror dungeon tools out there so why should you use Sir Squirrel instead. Well here's why
 * E.G.O Gift Choice
