@@ -10,22 +10,22 @@ There are already other auto mirror dungeon tools out there so why should you us
     * Choose the squad order for each team and Sir Squirrel will follow it
 * Pack Selection
     * Automatically choose packs based off your E.G.O Gift as well as using a priority list for packs for each floor
+    * Filters for duplicate gifts automatically
     * Note that due to the nature of how it works which is win-rating through battles certain packs are already prefiltered to be excluded such as
         * Skin Prophet
-        * Bamboo Kim
-        * Slithcurrent
+        * Bamboo Kim (This has been lifted due to the introduction of E.G.O Usage)
+        * Slithcurrent (This has been lifted due to the introduction of E.G.O Usage)
 * E.G.O Gift Enhancement
     * Sir Squirrel upgrades E.G.O Gifts of the status you chose along with keywordless gifts at rest stops
 * E.G.O Gift Purchase
     * Sir Squirrel purchases E.G.O Gifts according to the status you chose as well as keywordless gifts
 * Resolution Aware
     * Sir Squirrel now works regardless of resolution
+* E.G.O Usage
+    * Sir Squirrel now uses E.G.O in battle for unfavorable clashes
 
 # Planned Features
 These are features i intend to add when i have time for Sir Squirrel development
-* Using EGO in battle
-    * Shifted to low priority not necessary for now
-
 * Auto Luxcavation, Threads and Dailies
     * Shifted to low priority due to mainly focusing on the eventual MD5 update
 
@@ -38,7 +38,10 @@ These are features i intend to add when i have time for Sir Squirrel development
 * Any Suggestions or Enhancements i can make to Sir Squirrel based on feedback that is feasible for development
 
 # Known Issues
-Need more feedback pertaining to the Resolution Aware version.
+* Need feedback if for the new events added
+* E.G.O Usage might not work on very low resolutions (1280x720)
+* Sir Squirrel does not work on MULTI-MONITOR SETUPS.
+     * You can try running it on the primary monitor or just disconnect until you only have one monitor
 
 # Bug Reporting
 Please let me know about any issues you face with Sir Squirrel and I will do my best to look into it.
