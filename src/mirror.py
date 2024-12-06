@@ -36,7 +36,7 @@ class Mirror:
             return common.squad_order(status)
 
     def setup_mirror(self):
-        """Main Mirror Logic of identifying and running the specified function"""
+        """Setting up the Mirror Dungeon Run"""
         common.click_matching("pictures/mirror/general/md_enter.png")
 
         if common.element_exist("pictures/mirror/general/explore_reward.png"): #needs to test
@@ -67,7 +67,7 @@ class Mirror:
         if common.element_exist("pictures/mirror/general/squad_select.png"): #checks if in Squad select
             self.initial_squad_selection()
 
-        if common.element_exist("pictures/mirror/grace/grace_menu.png"):
+        if common.element_exist("pictures/mirror/grace/grace_menu.png"): #checks if in grace menu
             self.grace_of_stars()
 
         if common.element_exist("pictures/mirror/general/gift_select.png"): #Checks if in gift select
@@ -94,7 +94,7 @@ class Mirror:
             common.mouse_move(200,200)
             common.click_skip(4)
 
-        if common.element_exist("pictures/general/maint.png"):
+        if common.element_exist("pictures/general/maint.png"): #maintainance prompt
             common.click_matching("pictures/general/close.png")
             common.sleep(0.5)
             common.click_matching("pictures/general/no_op.png")
@@ -102,22 +102,22 @@ class Mirror:
             self.logger.info("SERVER UNDERGOING MAINTAINANCE, BOT WILL STOP NOW!")
             exit()
 
-        if common.element_exist("pictures/general/server_error.png"):
+        if common.element_exist("pictures/general/server_error.png"): #network connectivity issues
             reconnect()
 
-        if common.element_exist("pictures/mirror/general/event.png"):
+        if common.element_exist("pictures/mirror/general/event.png"): #Events handling
             self.event_choice()
 
         elif common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
             self.navigation()
 
-        elif common.element_exist("pictures/mirror/restshop/shop.png"):
+        elif common.element_exist("pictures/mirror/restshop/shop.png"): #new combined shop and rest stop
             self.rest_shop()
 
         elif common.element_exist("pictures/battle/clear.png"): #checks if in squad select and then proceeds with battle
             self.squad_select()
 
-        elif common.element_exist("pictures/battle/winrate.png"):
+        elif common.element_exist("pictures/battle/winrate.png"):  #checks if in battle
             battle()
 
         elif common.element_exist("pictures/mirror/general/reward_select.png"): #checks if in reward select
@@ -131,45 +131,39 @@ class Mirror:
 
         elif common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
             self.logger.info("Handling EGO GIFT Prompt")
-            common.click_matching("pictures/general/confirm_b.png")
+            common.click_matching("pictures/general/confirm_b.png") #might replace with enter
 
         return self.check_run()
 
     def grace_of_stars(self):
         self.logger.info("Selecting Grace")
-        found = common.match_image("pictures/mirror/grace/grace.png")
-        grace = len(found) # The number of stars translate to about 60 post update but at least 30 right now
-        if grace >= 4:
-            grace_blessing = "pictures/mirror/grace/40.png"
-        else:
-            grace_blessing = "pictures/mirror/grace/30.png"
-        #grace_blessing = mirror_utils.grace_choice(grace)
-        self.logger.info("Blessing amount at least: " + str(grace) + "0")
-        common.click_matching(grace_blessing,0.9)
-        self.logger.info("Selected Grace Blessing")
-        common.click_matching("pictures/mirror/general/enter_b.png")
+        graces = [(925,890),(1300,890),(1300,445),(1675,445),(550,445)] #Levels, Stats Up, Theme Packs, Cost+Gift, Generalist Gift
+        for x,y in graces:
+            common.mouse_move_click(common.scale_x(x),common.scale_y(y))
         self.logger.info("Confirming Grace")
+        common.click_matching("pictures/mirror/general/enter_b.png")
         common.sleep(1)
-        common.click_matching("pictures/general/confirm_b.png")
         self.logger.info("Confirmed Grace")
+        common.click_matching("pictures/general/confirm_b.png")
         while(not common.element_exist("pictures/mirror/general/gift_select.png")): #Mitigate the weird freeze
             common.sleep(0.5)
     
     def gift_selection(self):
         """selects the ego gift of the same status, fallsback on random if not unlocked"""
         self.logger.info("E.G.O Gift Selection")
-        gift = mirror_utils.gift_choice(self.status) or "pictures/mirror/gifts/random.png"
+        gift = mirror_utils.gift_choice(self.status)
         if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
             found = common.match_image("pictures/mirror/general/gift_select.png")
             x,y = found[0]
             common.mouse_move(x - common.scale_x(1365),y + common.scale_y(50))
             for i in range(5):
                 common.mouse_scroll(-1000)
-        
-        if common.element_exist(gift,0.9) is None: # i forgot to check again if it is not found
-            gift = "pictures/mirror/gifts/random.png"
-            #self.status = "random" #Reset the gift to fail the squad selection check
-            #self.squad_order = self.set_sinner_order("default") #Uses the default squad
+
+        #not needed anymore since its unlocked by default
+        #if common.element_exist(gift,0.9) is None: # i forgot to check again if it is not found
+        #    gift = "pictures/mirror/gifts/poise.png"
+        #    #self.status = "random" #Reset the gift to fail the squad selection check
+        #    #self.squad_order = self.set_sinner_order("default") #Uses the default squad
 
         found = common.match_image("pictures/mirror/general/gift_select.png")
         x,y = found[0]
@@ -182,11 +176,11 @@ class Mirror:
         common.click_matching(gift,0.9) #click on specified
         for i in initial_gift_coords:
             common.mouse_move_click(common.uniform_scale_single(1640),i)
-        #common.mouse_move_click(common.uniform_scale_single(1640),initial_gift_coords[1])
-        common.click_matching("pictures/mirror/general/confirm_gift.png")
+        common.key_press("enter")
         for i in range(3):
             if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
-                common.click_matching("pictures/general/confirm_b.png")
+                common.key_press("enter")
+                # common.click_matching("pictures/general/confirm_b.png")
         check_loading()
 
     def initial_squad_selection(self):
@@ -194,8 +188,9 @@ class Mirror:
         self.logger.info("Mirror Dungeon Squad Select")
         status = mirror_utils.squad_choice(self.status)
         if status is None:
-            #common.key_press("enter")
-            common.click_matching("pictures/squads/confirm_squad.png")
+            self.logger.debug("Status not found - defaulting to poise")
+            common.key_press("enter")
+            #common.click_matching("pictures/squads/confirm_squad.png")
             self.status = "poise"
             return
         #This is to bring us to the first entry of teams
@@ -217,9 +212,9 @@ class Mirror:
             else:
                 common.click_matching(status)
                 break
-        #common.key_press("enter")
-        common.click_matching("pictures/squads/confirm_squad.png")
-        common.sleep(1) #Transitional to Grace of Dreams
+        common.key_press("enter")
+        #common.click_matching("pictures/squads/confirm_squad.png")
+        common.sleep(2) #Transitional to Grace of Dreams
 
     def pack_selection(self):
         """Prioritises the status gifts for packs if not follows a list"""
@@ -227,14 +222,18 @@ class Mirror:
         status = mirror_utils.pack_choice(self.status) or "pictures/mirror/packs/status/poise_pack.png"
         floor = self.floor_id()
         self.logger.debug("Current Floor "+ floor)
-        if floor == "f1":
-            common.sleep(2) # the ego gift crediting blocks the refresh button
+        if floor == "f1" or common.element_exist("pictures/mirror/packs/floor_hard.png"): #accounts for cost additions or hard mode swap
+            common.sleep(4) # the ego gift crediting blocks the refresh button
+            if common.element_exist("pictures/mirror/packs/hard_toggle.png"): #Accounting for previous hard run and toggling back.
+                self.logger.debug("Hard Mode was previously ran, reverting to Normal")
+                common.click_matching("pictures/mirror/packs/hard_toggle.png")
+                self.pack_selection()
         common.mouse_move(200,200)
         common.sleep(2)
         found = common.match_image("pictures/mirror/general/refresh.png")
         x,y = found[0]
         self.logger.debug(common.luminence(x,y))
-        refresh_flag = common.luminence(x,y) < 70 #Test
+        refresh_flag = common.luminence(x,y) < 70 
         
         #TESTING 0.8 on Statuses
         if self.exclusion_detection(floor) and not refresh_flag: #if pack exclusion detected and not refreshed
@@ -247,7 +246,7 @@ class Mirror:
             self.logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
             return self.pack_list(floor)
 
-        if common.element_exist(status) and not self.exclusion_detection(floor) and floor != "f5": #if pack exclusion absent and status exists
+        if common.element_exist(status) and not self.exclusion_detection(floor) and floor != "f5": #if pack exclusion absent and status exists and not Floor 5
             self.logger.debug("pack exclusion not detected, status detected, choosing from status")
             return self.choose_pack(status)
 
@@ -268,6 +267,14 @@ class Mirror:
 
     def choose_pack(self,pack_image, threshold=0.8):
         found = common.match_image(pack_image,threshold)
+        if common.element_exist("pictures/mirror/packs/status/owned.png"):
+            owned_found = common.match_image("pictures/mirror/packs/status/owned.png")
+            owned_check = common.proximity_check(found,owned_found,50)
+            if owned_check:
+                self.logger.debug("Found Owned Gifts in Pack rewards - filtering")
+                if len(found) > len(owned_check):
+                    for i in owned_check:
+                        found.remove(i)
         x,y = common.random_choice(found)
         common.mouse_move(x,y-common.uniform_scale_single(350))
         common.mouse_drag(x,y)
@@ -331,10 +338,12 @@ class Mirror:
             x,y = common.random_choice(found)
             common.mouse_move_click(x,y)
 
-        common.click_matching("pictures/mirror/general/confirm_gift.png")
+        #common.click_matching("pictures/mirror/general/confirm_gift.png")
+        common.key_press("enter")
         common.sleep(1)
-        common.click_matching("pictures/general/confirm_b.png")
-        #common.key_press("enter")
+        #common.click_matching("pictures/general/confirm_b.png")
+        
+        common.key_press("enter")
 
     def encounter_reward_select(self):
         """Select Encounter Rewards prioritising starlight first"""
@@ -389,35 +398,44 @@ class Mirror:
                 common.click_matching("pictures/general/confirm_w.png")
                 self.logger.debug("SOLD VESTIGE")
 
-            #if common.element_exist("pictures/mirror/restshop/market/vestige_1.png"):
-            #    common.click_matching("pictures/mirror/restshop/market/vestige_1.png")
-            #    common.click_matching("pictures/mirror/restshop/market/sell_b.png")
-            #    common.click_matching("pictures/general/confirm_w.png")
-            #    self.logger.debug("SOLD VESTIGE")
-
             if common.element_exist("pictures/mirror/restshop/scroll_bar.png"):
                 common.click_matching("pictures/mirror/restshop/scroll_bar.png")
                 for k in range(5):
                     common.mouse_scroll(-1000)
     
     def fuse(self):
-        #common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
         common.click_matching("pictures/mirror/restshop/fusion/fuse_b.png")
         common.click_matching("pictures/general/confirm_b.png")
-        common.sleep(0.5)
-        common.click_matching("pictures/general/confirm_b.png")
+        while(not common.element_exist("pictures/mirror/general/ego_gift_get.png")): #in the event of slow connection
+            common.sleep(0.5)
+        common.key_press("enter")
         self.logger.debug("FUSED GIFT")
 
+    def find_gifts(self, statuses):
+        self.logger.debug("FUSION: Finding Gifts")
+        fusion_gifts = []
+        if common.element_exist("pictures/mirror/restshop/market/vestige_2.png"):
+            self.logger.debug("FUSION: Found Vestiges")
+            fusion_gifts += common.match_image("pictures/mirror/restshop/market/vestige_2.png")
+        for i in statuses:
+            status = mirror_utils.enhance_gift_choice(i)
+            if common.element_exist(status):
+                self.logger.debug("FUSION: Found Status Gifts")
+                fusion_gifts += common.match_image(status)
+        
+        return [x for x in fusion_gifts if x[0] > common.scale_x(1235)] #this is to remove the left side 
+    
     def fuse_gifts(self):
         statuses = ["burn","bleed","tremor","rupture","sinking","poise","charge","slash","pierce","blunt"] #List of status to use
         statuses.remove(self.status)
         self.logger.debug("STARTING FUSION")
         common.click_matching("pictures/mirror/restshop/fusion/fuse.png")
+        common.sleep(0.5)
         common.click_matching("pictures/mirror/restshop/fusion/middle_box.png")
         status_picture = mirror_utils.fusion_choice(self.status)
-        #status_small_picutre = mirror_utils.fusion_choice_small(self.status)
         common.click_matching(status_picture)
         common.click_matching("pictures/general/confirm_b.png")
+        self.logger.debug("FUSION: Sorting Gifts")
         common.click_matching("pictures/mirror/restshop/fusion/bytier.png")
         common.click_matching("pictures/mirror/restshop/fusion/bykeyword.png")
 
@@ -426,31 +444,50 @@ class Mirror:
             for i in range(5):
                 common.mouse_scroll(1000)
 
-        click_count = 0
-        for _ in range(2):
-            if common.element_exist("pictures/mirror/restshop/market/vestige_2.png"):
-                found = common.match_image("pictures/mirror/restshop/market/vestige_2.png")
-                for x,y in found:
+        while(True):
+            fusion_gifts = self.find_gifts(statuses)
+            if len(fusion_gifts) >= 3:
+                self.logger.debug("FUSION: Found 3 Gifts to fuse")
+                click_count = 0
+                for x,y in fusion_gifts:
                     common.mouse_move_click(x,y)
                     common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
                     click_count += 1
-            for i in statuses:
-                status = mirror_utils.enhance_gift_choice(i)
-                if common.element_exist(status):
-                    found = common.match_image(status)
-                    for x,y in found:
-                        common.mouse_move_click(x,y)
-                        common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
-                        click_count += 1
-            if click_count >= 3:
-                self.fuse()
+                    if click_count == 3:
+                        self.fuse()
+                        click_count = 0
+                        break
+
+            elif len(fusion_gifts) > 0 and common.element_exist("pictures/mirror/restshop/scroll_bar.png"):
+                self.logger.debug("FUSION: Found 1-2 Gifts to fuse, checking for more")
                 click_count = 0
-            if common.element_exist("pictures/mirror/restshop/scroll_bar.png"): #if scroll bar present scrolls to the start
+                for x,y in fusion_gifts:
+                    common.mouse_move_click(x,y)
+                    common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
+                    click_count += 1
                 common.click_matching("pictures/mirror/restshop/scroll_bar.png")
                 for i in range(5):
                     common.mouse_scroll(-1000)
+                fusion_gifts = self.find_gifts(statuses)
+                if (len(fusion_gifts) + click_count) >= 3:
+                    self.logger.debug("FUSION: Found 3 Gifts to fuse after scrolling")
+                    for x,y in fusion_gifts:
+                        common.mouse_move_click(x,y)
+                        common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
+                        click_count += 1
+                        if click_count == 3:
+                            self.fuse()
+                            click_count = 0
+                            break
+                else:
+                    self.logger.debug("FUSION: Did not find 3 Gifts to fuse after scrolling")
+                    break
+            else:
+                self.logger.debug("FUSION: Did not find 3 Gifts to fuse")
+                break
 
         common.click_matching("pictures/mirror/restshop/close.png")
+        self.logger.debug("Exiting Fusion")
 
     def rest_shop(self):
         #Flow should be Sell > Heal > Enhance > Buy since cost is scarce and stronger gifts is better
@@ -493,22 +530,25 @@ class Mirror:
                     common.mouse_scroll(1000)
             self.enhance_gifts(status)
             if common.element_exist("pictures/mirror/restshop/close.png"):
+                self.logger.debug("REST SHOP: FINISHED ENHANCING GIFTS")
                 common.click_matching("pictures/mirror/restshop/close.png")
 
             #BUYING
+            self.logger.debug("REST SHOP: PURCHASE GIFT START")
             status = mirror_utils.market_choice(self.status)
             if status is None:
                 status = "pictures/mirror/restshop/market/poise_market.png"
             for _ in range(4):
                 market_gifts = []
                 if common.element_exist(status):
+                    self.logger.debug("REST SHOP: FOUND STATUS GIFT")
                     market_gifts += common.match_image(status)
                 #keywordless gifts
                 if common.element_exist("pictures/mirror/restshop/market/wordless.png"):
-                    #wordless_gifts = common.match_image("pictures/mirror/restshop/market/wordless.png")
-                    wordless_gifts = [x for x in common.match_image("pictures/mirror/restshop/market/wordless.png") if not common.scale_x(x[0]) < common.scale_x(1300)]
+                    self.logger.debug("REST SHOP: FOUND WORDLESS GIFT")
+                    #Filters in the event of the skill replacement being detected
+                    wordless_gifts = [x for x in common.match_image("pictures/mirror/restshop/market/wordless.png") if not (abs(x[0] - common.scale_x(1300)) <= 10 and abs(x[1] - common.scale_y(541)) <= 10)] 
                     market_gifts += wordless_gifts
-                #    #print(market_gifts)
                 if len(market_gifts):
                     for x,y in market_gifts:
                         #x,y = i
@@ -520,7 +560,7 @@ class Mirror:
                             break
                         common.mouse_move_click(x,y)
                         if common.element_exist("pictures/mirror/restshop/market/purchase.png"): #purchase button will appear if purchasable
-                            self.logger.debug("MARKET: PURCHASED EGO GIFT")
+                            self.logger.debug("REST SHOP: PURCHASED EGO GIFT")
                             common.click_matching("pictures/mirror/restshop/market/purchase.png")
                             common.click_matching("pictures/general/confirm_b.png")
 
@@ -529,6 +569,7 @@ class Mirror:
 
                 if _ != 3:
                     common.click_matching("pictures/mirror/restshop/market/refresh.png")
+                    self.logger.debug("REST SHOP:Refreshing Shop")
 
         #LEAVING
         common.click_matching("pictures/mirror/restshop/leave.png")
@@ -537,24 +578,25 @@ class Mirror:
 
     def upgrade(self,status,shift_x,shift_y):
         gifts = common.match_image(status)
-        for x,y in gifts:
-            self.logger.debug(common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)))
-            if common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
-                continue
-            common.mouse_move_click(x,y)
-            for _ in range(2): #upgrading twice
-                if common.element_exist("pictures/mirror/restshop/enhance/fully_upgraded.png"): #if fully upgraded skip this item
-                    break
-                common.click_matching("pictures/mirror/restshop/enhance/power_up.png")
-                if common.element_exist("pictures/mirror/restshop/enhance/more.png"): #If player has no more cost exit
-                    self.logger.debug("REST SHOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
-                    common.click_matching("pictures/mirror/restshop/enhance/cancel.png")
-                    common.sleep(1)
-                    common.mouse_click()
-                    return
-                elif common.element_exist("pictures/mirror/restshop/enhance/confirm.png"):
-                    self.logger.debug("REST STOP: EGO STATUS GIFT UPGRADED")
-                    common.click_matching("pictures/mirror/restshop/enhance/confirm.png")
+        if len(gifts):
+            for x,y in gifts:
+                self.logger.debug(common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)))
+                if common.luminence(x+common.uniform_scale_single(shift_x),y+common.uniform_scale_single(shift_y)) < 21: #19.66 is for upgraded and 14.33 is for greyed out so 20 should work for now
+                    continue
+                common.mouse_move_click(x,y)
+                for _ in range(2): #upgrading twice
+                    if common.element_exist("pictures/mirror/restshop/enhance/fully_upgraded.png"): #if fully upgraded skip this item
+                        break
+                    common.click_matching("pictures/mirror/restshop/enhance/power_up.png")
+                    if common.element_exist("pictures/mirror/restshop/enhance/more.png"): #If player has no more cost exit
+                        self.logger.debug("REST SHOP: NOT ENOUGH COST, EXITING ENHANCE PAGE")
+                        common.click_matching("pictures/mirror/restshop/enhance/cancel.png")
+                        common.sleep(1)
+                        common.mouse_click()
+                        return
+                    elif common.element_exist("pictures/mirror/restshop/enhance/confirm.png"):
+                        self.logger.debug("REST STOP: EGO STATUS GIFT UPGRADED")
+                        common.click_matching("pictures/mirror/restshop/enhance/confirm.png")
 
     def enhance_gifts(self,status):
         """Enhancement gift process"""
@@ -584,8 +626,6 @@ class Mirror:
         if common.element_exist("pictures/events/select_gain.png"): #Select to gain EGO Gift
             self.logger.debug("Select to gain EGO Gift")
             common.click_matching("pictures/events/select_gain.png")
-            #x,y = common.find_skip()
-            #common.mouse_move_click(x,y)
             common.mouse_move_click(common.scale_x(1193),common.scale_y(623))
             while(True):
                 common.mouse_click()
@@ -597,8 +637,8 @@ class Mirror:
                     break
             common.sleep(1)
             if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
-                common.click_matching("pictures/general/confirm_b.png")
-                #common.key_press("enter")
+                #common.click_matching("pictures/general/confirm_b.png")
+                common.key_press("enter")
 
         if common.element_exist("pictures/events/gain_check.png"): #Pass to gain an EGO Gift
             self.logger.debug("Pass to gain EGO Gift")
@@ -634,8 +674,8 @@ class Mirror:
             common.click_matching("pictures/mirror/events/kqe.png")
             common.wait_skip("pictures/events/continue.png")
             if common.element_exist("pictures/mirror/general/ego_gift_get.png"): #handles the ego gift get
-                common.click_matching("pictures/general/confirm_b.png")
-                #common.key_press("enter") 
+                #common.click_matching("pictures/general/confirm_b.png")
+                common.key_press("enter") 
 
     def victory(self):
         self.logger.info("Run Won")
@@ -653,9 +693,10 @@ class Mirror:
             while(True):
                 if common.element_exist("pictures/mirror/general/pass_level.png"):
                     self.logger.debug("BP PROMPT")
-                    common.click_matching("pictures/general/confirm_b.png")
+                    common.key_press("enter")
+                    #common.click_matching("pictures/general/confirm_b.png")
                     break
-                    #common.key_press("enter")
+                    
             post_run_load()
         else: #incase not enough modules
             common.click_matching("pictures/general/to_window.png")

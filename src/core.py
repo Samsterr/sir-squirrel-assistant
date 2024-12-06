@@ -11,13 +11,6 @@ def refill_enkephalin():
     common.click_matching("pictures/general/confirm_w.png")
     common.click_matching("pictures/general/cancel.png")
 
-#def navigate_to_md():
-#    """Navigates to the Mirror Dungeon from the menu"""
-#    logger.info("Navigating to Mirror Dungeon")
-#    common.click_matching("pictures/general/window.png")
-#    common.click_matching("pictures/general/drive.png")
-#    common.click_matching("pictures/general/MD.png")
-
 def navigate_to_md():
     """Navigates to the Mirror Dungeon from the menu"""
     logger.info("Navigating to Mirror Dungeon")
@@ -86,14 +79,9 @@ def battle():
             common.mouse_up()
             x,y = common.uniform_scale_coordinates(2165,1343)
             common.mouse_move_click(x,y)
-            #common.key_press("p") #win rate keyboard key
-            #common.key_press("enter") #Battle Start key
-            found = common.match_image("pictures/battle/winrate.png")
-            x,y = found[0]
-            common.click_matching("pictures/battle/winrate.png")
+            common.key_press("p") #win rate keyboard key
             ego_check()
-            common.mouse_move_click(x-common.scale_x(181),y)
-            #common.click_matching("pictures/battle/start.png")
+            common.key_press("enter") #Battle Start key
             common.mouse_down()
         if common.element_exist("pictures/general/server_error.png"):
             common.mouse_up()
@@ -101,6 +89,7 @@ def battle():
             reconnect()
 
 def ego_check():
+    """Checks for hopeless/struggling clashes and uses E.G.O if possible"""
     bad_clashes = []
     usable_ego = []
     if common.element_exist("pictures/battle/ego/hopeless.png",0.79):
@@ -109,6 +98,7 @@ def ego_check():
     if common.element_exist("pictures/battle/ego/struggling.png",0.79):
         bad_clashes += common.match_image("pictures/battle/ego/struggling.png",0.79)
         logger.debug("STRUGGLING FOUND")
+    bad_clashes = [x for x in bad_clashes if common.scale_y(x[1]) > common.scale_y(1023)] # this is to remove any false positives
     if len(bad_clashes):
         logger.debug("BAD CLASHES FOUND")
         for x,y in bad_clashes:
@@ -117,7 +107,7 @@ def ego_check():
             egos = common.match_image("pictures/battle/ego/sanity.png")
             for i in egos:
                 x,y = i
-                if common.luminence(x,y) > 100:
+                if common.luminence(x,y) > 100:#Sanity icon
                     usable_ego.append(i)
             if len(usable_ego):
                 logger.debug("EGO USABLE")
@@ -128,9 +118,9 @@ def ego_check():
             else:
                 logger.debug("EGO UNUSABLE")
                 common.mouse_move_click(200,200)
-        common.click_matching("pictures/battle/winrate.png")
-        common.mouse_move(200,200)
-        common.click_matching("pictures/battle/winrate.png")
+        common.key_press("p") #Change to Damage
+        common.key_press("p") #Deselects
+        common.key_press("p") #Back to winrate
     return
     
 def battle_check(): #pink shoes, woppily, doomsday clock
@@ -172,7 +162,7 @@ def battle_check(): #pink shoes, woppily, doomsday clock
             logger.debug("Found Clay Option")
             logger.debug(common.luminence(x,y-common.uniform_scale_single(72)))
             if common.luminence(x,y-common.uniform_scale_single(72)) < 195:
-                logger.debug("Offer CLAY USED")
+                logger.debug("Offer Clay")
                 common.click_matching("pictures/battle/offer_clay.png")
                 common.wait_skip("pictures/events/continue.png")
                 return 0

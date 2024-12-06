@@ -20,8 +20,6 @@ def gift_choice(status):
             return "pictures/mirror/gifts/pierce.png"
         case "blunt":
             return "pictures/mirror/gifts/blunt.png"
-        case "random":
-            return "pictures/mirror/gifts/random.png"
     
 def squad_choice(status):
     match status:

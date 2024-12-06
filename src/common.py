@@ -140,6 +140,15 @@ def match_image(template_path, threshold=0.8):
     # Return the list of center coordinates of all found elements or None if no elements found
     return None
 
+def proximity_check(list1, list2, threshold):
+    close_pairs = set()  # To store pairs of coordinates that are close
+    for coord1 in list1:
+        for coord2 in list2:
+            distance = np.sqrt((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2)
+            if distance < threshold:
+                close_pairs.add(coord1)
+    return close_pairs
+
 def debug_match_image(template_path, threshold=0.8):
     """Finds the image specified and returns the center coordinates, regardless of screen resolution,
        and draws rectangles on each match found."""
@@ -309,9 +318,9 @@ def click_matching(image_path,threshold=0.8):
             x,y = found[0]
             mouse_move_click(x,y)
             time.sleep(0.5)
-        else:
-            mouse_move(200,200)
-            click_matching(image_path,threshold)
+    else:
+        mouse_move(200,200)
+        click_matching(image_path,threshold)
 
 def element_exist(img_path,threshold=0.8):
     """Checks if the element exists if not returns none"""
