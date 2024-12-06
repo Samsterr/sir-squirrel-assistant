@@ -28,6 +28,17 @@ def mouse_click():
     """Performs a left click on the current position"""
     pyautogui.click()
 
+def mouse_hold():
+    pyautogui.mouseDown()
+    sleep(2)
+    pyautogui.mouseUp()
+
+def mouse_down():
+    pyautogui.mouseDown()
+
+def mouse_up():
+    pyautogui.mouseUp()
+
 def mouse_move_click(x,y):
     """Moves the mouse to the X,Y coordinate specified and performs a left click"""
     pyautogui.click(x,y)
@@ -125,9 +136,18 @@ def match_image(template_path, threshold=0.8):
     
     if found_elements:
         #save_match_screenshot(screenshot, (x1, y1), (x2, y2), template_path, match_index)
-        return found_elements
+        return sorted(found_elements)
     # Return the list of center coordinates of all found elements or None if no elements found
     return None
+
+def proximity_check(list1, list2, threshold):
+    close_pairs = set()  # To store pairs of coordinates that are close
+    for coord1 in list1:
+        for coord2 in list2:
+            distance = np.sqrt((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2)
+            if distance < threshold:
+                close_pairs.add(coord1)
+    return close_pairs
 
 def debug_match_image(template_path, threshold=0.8):
     """Finds the image specified and returns the center coordinates, regardless of screen resolution,
@@ -298,9 +318,9 @@ def click_matching(image_path,threshold=0.8):
             x,y = found[0]
             mouse_move_click(x,y)
             time.sleep(0.5)
-        else:
-            mouse_move(200,200)
-            click_matching(image_path,threshold)
+    else:
+        mouse_move(200,200)
+        click_matching(image_path,threshold)
 
 def element_exist(img_path,threshold=0.8):
     """Checks if the element exists if not returns none"""
@@ -346,6 +366,7 @@ def luminence(x,y):
     return coeff
 
 def error_screenshot():
+    os.makedirs("error", exist_ok=True)
     with mss() as sct:
         # Dynamically get the current screen resolution
         monitor = sct.monitors[1]  # [1] is the primary monitor; adjust if using multiple monitors

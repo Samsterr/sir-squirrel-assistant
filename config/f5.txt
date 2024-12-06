@@ -1,0 +1,14 @@
+pictures/mirror/packs/f5/gluttony.png
+pictures/mirror/packs/f5/gloom.png
+pictures/mirror/packs/f5/envy.png
+pictures/mirror/packs/f5/lust.png
+pictures/mirror/packs/f5/world.png
+pictures/mirror/packs/f5/warp.png
+pictures/mirror/packs/f5/crushers.png
+pictures/mirror/packs/f5/piercers.png
+pictures/mirror/packs/f5/tearful.png
+pictures/mirror/packs/f5/time.png
+pictures/mirror/packs/f5/yield.png
+pictures/mirror/packs/f5/slicers.png
+pictures/mirror/packs/f5/sloth.png
+pictures/mirror/packs/f5/pride.png
