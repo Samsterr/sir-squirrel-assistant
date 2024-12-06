@@ -44,11 +44,10 @@ def mirror_dungeon_run(num_runs, logger):
             else:
                 lose_count += 1
             run_count += 1
-
         logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
     except Exception as e:
         common.error_screenshot()
-        logger.error(e)
+        logger.exception(e)
 
 def main():
     logging.basicConfig(

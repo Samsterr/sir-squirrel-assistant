@@ -93,13 +93,15 @@ def ego_check():
     bad_clashes = []
     usable_ego = []
     if common.element_exist("pictures/battle/ego/hopeless.png",0.79):
-        bad_clashes += common.match_image("pictures/battle/ego/hopeless.png",0.79)
         logger.debug("HOPELESS FOUND")
+        bad_clashes += common.match_image("pictures/battle/ego/hopeless.png",0.79)
+        
     if common.element_exist("pictures/battle/ego/struggling.png",0.79):
-        bad_clashes += common.match_image("pictures/battle/ego/struggling.png",0.79)
         logger.debug("STRUGGLING FOUND")
-    bad_clashes = [x for x in bad_clashes if common.scale_y(x[1]) > common.scale_y(1023)] # this is to remove any false positives
+        bad_clashes += common.match_image("pictures/battle/ego/struggling.png",0.79)
+    
     if len(bad_clashes):
+        bad_clashes = [x for x in bad_clashes if x[1] > common.scale_y(1023)] # this is to remove any false positives
         logger.debug("BAD CLASHES FOUND")
         for x,y in bad_clashes:
             common.mouse_move(x-common.scale_x(30),y+common.scale_y(100))

@@ -138,7 +138,7 @@ def match_image(template_path, threshold=0.8):
         #save_match_screenshot(screenshot, (x1, y1), (x2, y2), template_path, match_index)
         return sorted(found_elements)
     # Return the list of center coordinates of all found elements or None if no elements found
-    return None
+    return []
 
 def proximity_check(list1, list2, threshold):
     close_pairs = set()  # To store pairs of coordinates that are close
@@ -318,9 +318,9 @@ def click_matching(image_path,threshold=0.8):
             x,y = found[0]
             mouse_move_click(x,y)
             time.sleep(0.5)
-    else:
-        mouse_move(200,200)
-        click_matching(image_path,threshold)
+        else:
+            mouse_move(200,200)
+            click_matching(image_path,threshold)
 
 def element_exist(img_path,threshold=0.8):
     """Checks if the element exists if not returns none"""

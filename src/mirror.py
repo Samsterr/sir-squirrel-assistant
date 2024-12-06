@@ -152,7 +152,7 @@ class Mirror:
         """selects the ego gift of the same status, fallsback on random if not unlocked"""
         self.logger.info("E.G.O Gift Selection")
         gift = mirror_utils.gift_choice(self.status)
-        if common.element_exist(gift,0.9) is None: #Search for gift and if not present scroll to find it
+        if not common.element_exist(gift,0.9): #Search for gift and if not present scroll to find it
             found = common.match_image("pictures/mirror/general/gift_select.png")
             x,y = found[0]
             common.mouse_move(x - common.scale_x(1365),y + common.scale_y(50))
@@ -201,7 +201,7 @@ class Mirror:
             common.mouse_scroll(1000)
         #scrolls through all the squads in steps to look for the name
         for _ in range(4):
-            if common.element_exist(status) is None:
+            if not common.element_exist(status):
                 for i in range(7):
                     common.mouse_scroll(-1000)
                 common.sleep(1)
@@ -329,7 +329,7 @@ class Mirror:
         status_effect = mirror_utils.reward_choice(self.status)
         if status_effect is None:
             status_effect = "pictures/mirror/rewards/poise_reward.png"
-        if common.element_exist(status_effect) is None:
+        if not common.element_exist(status_effect):
             found = common.match_image("pictures/mirror/general/reward_select.png")
             x,y = common.random_choice(found)
             common.mouse_move_click(x,y)
@@ -431,6 +431,9 @@ class Mirror:
         self.logger.debug("STARTING FUSION")
         common.click_matching("pictures/mirror/restshop/fusion/fuse.png")
         common.sleep(0.5)
+        if not common.element_exist("pictures/mirror/restshop/fusion/middle_box.png"):
+            self.logger.debug("FUSION: Not Enough Gifts for Fusion")
+            return
         common.click_matching("pictures/mirror/restshop/fusion/middle_box.png")
         status_picture = mirror_utils.fusion_choice(self.status)
         common.click_matching(status_picture)
@@ -443,6 +446,7 @@ class Mirror:
             common.click_matching("pictures/mirror/restshop/scroll_bar.png")
             for i in range(5):
                 common.mouse_scroll(1000)
+            common.sleep(0.5)
 
         while(True):
             fusion_gifts = self.find_gifts(statuses)
@@ -468,10 +472,16 @@ class Mirror:
                 common.click_matching("pictures/mirror/restshop/scroll_bar.png")
                 for i in range(5):
                     common.mouse_scroll(-1000)
-                fusion_gifts = self.find_gifts(statuses)
-                if (len(fusion_gifts) + click_count) >= 3:
+                common.sleep(0.5)
+                fusion_gifts_scroll = self.find_gifts(statuses)
+                self.logger.debug("Fusion: Checking for Duplicated Gifts after scrolling")
+                duplicates = common.proximity_check(fusion_gifts_scroll,fusion_gifts,common.scale_y(164))
+                for i in duplicates:
+                    fusion_gifts_scroll.remove(i)
+                    self.logger.debug("Fusion: Removing Duplicates")
+                if (len(fusion_gifts_scroll) + click_count) >= 3:
                     self.logger.debug("FUSION: Found 3 Gifts to fuse after scrolling")
-                    for x,y in fusion_gifts:
+                    for x,y in fusion_gifts_scroll:
                         common.mouse_move_click(x,y)
                         common.click_matching("pictures/mirror/restshop/fusion/forecasts.png")
                         click_count += 1
