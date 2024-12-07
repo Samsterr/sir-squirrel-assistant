@@ -15,15 +15,15 @@ class Mirror:
     def floor_id():
         """Returns what floor is currently on"""
         floor = ""
-        if common.element_exist('pictures/mirror/packs/floor1.png',0.95):
+        if common.element_exist('pictures/mirror/packs/floor1.png',0.9):
             floor = "f1"
-        if common.element_exist('pictures/mirror/packs/floor2.png',0.95):
+        if common.element_exist('pictures/mirror/packs/floor2.png',0.9):
             floor = "f2"
-        if common.element_exist('pictures/mirror/packs/floor3.png',0.95):
+        if common.element_exist('pictures/mirror/packs/floor3.png',0.9):
             floor = "f3"
-        if common.element_exist('pictures/mirror/packs/floor4.png',0.95):
+        if common.element_exist('pictures/mirror/packs/floor4.png',0.9):
             floor = "f4"
-        if common.element_exist('pictures/mirror/packs/floor5.png',0.95):
+        if common.element_exist('pictures/mirror/packs/floor5.png',0.9):
             floor = "f5"
         return floor
         
@@ -569,6 +569,9 @@ class Mirror:
                             self.logger.debug("REST SHOP: NOT ENOUGH COST AFTER PURCHASE, EXITING MARKET")
                             break
                         common.mouse_move_click(x,y)
+                        if common.element_exist("pictures/mirror/restshop/market/replace.png"): #handle skill replacement opening
+                            self.logger.debug("REST SHOP: Skill Replacement Page Reached")
+                            common.click_matching("pictures/mirror/restshop/enhance/cancel.png")
                         if common.element_exist("pictures/mirror/restshop/market/purchase.png"): #purchase button will appear if purchasable
                             self.logger.debug("REST SHOP: PURCHASED EGO GIFT")
                             common.click_matching("pictures/mirror/restshop/market/purchase.png")

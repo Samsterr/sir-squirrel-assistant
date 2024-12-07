@@ -1,4 +1,5 @@
 from src import common
+from sys import exit
 import logging
 
 logger = logging.getLogger(__name__)
@@ -115,8 +116,10 @@ def ego_check():
                 logger.debug("EGO USABLE")
                 ego = common.random_choice(usable_ego)
                 x,y = ego
+                logger.debug("EGO Located at", str(x) , str(y))
                 for _ in range(2):
-                    common.mouse_move_click(x,y)
+                    common.mouse_move_click(x + common.scale_x(30), y+common.scale_y(30))
+                    common.sleep(0.5)
             else:
                 logger.debug("EGO UNUSABLE")
                 common.mouse_move_click(200,200)
