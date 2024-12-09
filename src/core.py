@@ -103,6 +103,7 @@ def ego_check():
     
     if len(bad_clashes):
         bad_clashes = [x for x in bad_clashes if x[1] > common.scale_y(1023)] # this is to remove any false positives
+        logger.debug(bad_clashes)
         logger.debug("BAD CLASHES FOUND")
         for x,y in bad_clashes:
             common.mouse_move(x-common.scale_x(30),y+common.scale_y(100))
@@ -116,7 +117,6 @@ def ego_check():
                 logger.debug("EGO USABLE")
                 ego = common.random_choice(usable_ego)
                 x,y = ego
-                logger.debug("EGO Located at", str(x) , str(y))
                 for _ in range(2):
                     common.mouse_move_click(x + common.scale_x(30), y+common.scale_y(30))
                     common.sleep(0.5)

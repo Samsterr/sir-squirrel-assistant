@@ -149,6 +149,16 @@ def proximity_check(list1, list2, threshold):
                 close_pairs.add(coord1)
     return close_pairs
 
+def proximity_check_fuse(list1, list2, threshold):
+    close_pairs = set()  # To store pairs of coordinates meeting the criteria
+    for coord1 in list1:
+        for coord2 in list2:
+            if coord1[0] == coord2[0]:  # Check if x values are the same
+                y_difference = abs(coord1[1] - coord2[1])
+                if y_difference < threshold:  # Check if y difference is within the threshold
+                    close_pairs.add(coord1)
+    return close_pairs
+
 def debug_match_image(template_path, threshold=0.8):
     """Finds the image specified and returns the center coordinates, regardless of screen resolution,
        and draws rectangles on each match found."""

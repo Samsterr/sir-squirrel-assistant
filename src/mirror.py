@@ -61,7 +61,8 @@ class Mirror:
 
         if common.element_exist("pictures/general/enter.png"): #Fresh run
             common.click_matching("pictures/general/enter.png")
-            common.sleep(1) #Transitional 
+            while(not common.element_exist("pictures/mirror/general/squad_select.png")):
+                common.sleep(0.5) 
             self.logger.info("Starting Run")
 
         if common.element_exist("pictures/mirror/general/squad_select.png"): #checks if in Squad select
@@ -214,7 +215,8 @@ class Mirror:
                 break
         common.key_press("enter")
         #common.click_matching("pictures/squads/confirm_squad.png")
-        common.sleep(2) #Transitional to Grace of Dreams
+        while(not common.element_exist("pictures/mirror/grace/grace_menu.png")):
+            common.sleep(0.5) #Transitional to Grace of Dreams
 
     def pack_selection(self):
         """Prioritises the status gifts for packs if not follows a list"""
@@ -329,12 +331,14 @@ class Mirror:
         status_effect = mirror_utils.reward_choice(self.status)
         if status_effect is None:
             status_effect = "pictures/mirror/rewards/poise_reward.png"
-        if not common.element_exist(status_effect):
+        if not common.element_exist(status_effect,0.85):
+            self.logger.debug("Reward Selection: Status not found")
             found = common.match_image("pictures/mirror/general/reward_select.png")
             x,y = common.random_choice(found)
             common.mouse_move_click(x,y)
         else:
-            found = common.match_image(status_effect)
+            self.logger.debug("Reward Selection: Status found")
+            found = common.match_image(status_effect,0.85)
             x,y = common.random_choice(found)
             common.mouse_move_click(x,y)
 
@@ -475,7 +479,7 @@ class Mirror:
                 common.sleep(0.5)
                 fusion_gifts_scroll = self.find_gifts(statuses)
                 self.logger.debug("Fusion: Checking for Duplicated Gifts after scrolling")
-                duplicates = common.proximity_check(fusion_gifts_scroll,fusion_gifts,common.scale_y(164))
+                duplicates = common.proximity_check_fuse(fusion_gifts_scroll,fusion_gifts,common.scale_y(164))
                 for i in duplicates:
                     fusion_gifts_scroll.remove(i)
                     self.logger.debug("Fusion: Removing Duplicates")
@@ -558,7 +562,7 @@ class Mirror:
                     self.logger.debug("REST SHOP: FOUND WORDLESS GIFT")
                     #Filters in the event of the skill replacement being detected
                     wordless_gifts = [x for x in common.match_image("pictures/mirror/restshop/market/wordless.png") if not (abs(x[0] - common.scale_x(1300)) <= 10 and abs(x[1] - common.scale_y(541)) <= 10)] 
-                    market_gifts += wordless_gifts
+                    wordless_gifts = [x for x in wordless_gifts if not x[0] > common.scale_x(2394)] #filter for lower resolutions
                 if len(market_gifts):
                     for x,y in market_gifts:
                         #x,y = i
@@ -709,7 +713,6 @@ class Mirror:
                     common.key_press("enter")
                     #common.click_matching("pictures/general/confirm_b.png")
                     break
-                    
             post_run_load()
         else: #incase not enough modules
             common.click_matching("pictures/general/to_window.png")
