@@ -691,6 +691,9 @@ class Mirror:
         self.special_events()
         battle_check() #Just incase your pc has a very weird occurence of messing up
 
+        if common.element_exist("pictures/events/skill_check.png"):
+            skill_check()
+
     def special_events(self):
         if common.element_exist("pictures/mirror/events/kqe.png"):
             self.logger.debug("KQE")

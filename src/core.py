@@ -177,7 +177,16 @@ def battle_check(): #pink shoes, woppily, doomsday clock
         common.wait_skip("pictures/events/proceed.png")
         skill_check()
         return 0
-        
+
+    if common.element_exist("pictures/battle/hug_bear.png"):
+        logger.debug("TEDDY BEAR")
+        common.click_matching("pictures/battle/hug_bear.png")
+        while(not common.element_exist("pictures/events/proceed.png")):
+            common.sleep(0.5)
+        common.click_matching("pictures/events/proceed.png")
+        skill_check()
+        return 0
+
     return 1
 
 def skill_check():
