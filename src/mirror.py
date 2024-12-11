@@ -269,9 +269,12 @@ class Mirror:
 
     def choose_pack(self,pack_image, threshold=0.8):
         found = common.match_image(pack_image,threshold)
+        self.logger.debug(found)
         if common.element_exist("pictures/mirror/packs/status/owned.png"):
             owned_found = common.match_image("pictures/mirror/packs/status/owned.png")
+            self.logger.debug(owned_found)
             owned_check = common.proximity_check(found,owned_found,50)
+            self.logger.debug(owned_check)
             if owned_check:
                 self.logger.debug("Found Owned Gifts in Pack rewards - filtering")
                 if len(found) > len(owned_check):
@@ -562,8 +565,11 @@ class Mirror:
                     self.logger.debug("REST SHOP: FOUND WORDLESS GIFT")
                     #Filters in the event of the skill replacement being detected
                     wordless_gifts = [x for x in common.match_image("pictures/mirror/restshop/market/wordless.png") if not (abs(x[0] - common.scale_x(1300)) <= 10 and abs(x[1] - common.scale_y(541)) <= 10)] 
-                    wordless_gifts = [x for x in wordless_gifts if not x[0] > common.scale_x(2394)] #filter for lower resolutions
+                    market_gifts += wordless_gifts
+                self.logger.debug(market_gifts)
                 if len(market_gifts):
+                    market_gifts = [x for x in market_gifts if (x[0] > common.scale_x(1091) and x[0] < common.scale_x(2322)) and (x[1] > common.scale_y(434) and x[1] < common.scale_y(919))] #filter within purchase area
+                    self.logger.debug(market_gifts)
                     for x,y in market_gifts:
                         #x,y = i
                         self.logger.debug(common.luminence(x+common.scale_x(25),y+common.scale_y(1)))
