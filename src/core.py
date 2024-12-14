@@ -92,7 +92,6 @@ def battle():
 def ego_check():
     """Checks for hopeless/struggling clashes and uses E.G.O if possible"""
     bad_clashes = []
-    usable_ego = []
     if common.element_exist("pictures/battle/ego/hopeless.png",0.79):
         logger.debug("HOPELESS FOUND")
         bad_clashes += common.match_image("pictures/battle/ego/hopeless.png",0.79)
@@ -106,23 +105,26 @@ def ego_check():
         logger.debug(bad_clashes)
         logger.debug("BAD CLASHES FOUND")
         for x,y in bad_clashes:
+            usable_ego = []
             common.mouse_move(x-common.scale_x(30),y+common.scale_y(100))
             common.mouse_hold()
             egos = common.match_image("pictures/battle/ego/sanity.png")
             for i in egos:
                 x,y = i
+                logger.debug(common.luminence(x,y))
                 if common.luminence(x,y) > 100:#Sanity icon
                     usable_ego.append(i)
             if len(usable_ego):
                 logger.debug("EGO USABLE")
                 ego = common.random_choice(usable_ego)
                 x,y = ego
-                for _ in range(2):
+                while(common.element_exist("pictures/battle/ego/sanity.png")):
                     common.mouse_move_click(x + common.scale_x(30), y+common.scale_y(30))
                     common.sleep(0.5)
             else:
                 logger.debug("EGO UNUSABLE")
-                common.mouse_move_click(200,200)
+                while(common.element_exist("pictures/battle/ego/sanity.png")):
+                    common.mouse_move_click(200,200)
         common.key_press("p") #Change to Damage
         common.key_press("p") #Deselects
         common.key_press("p") #Back to winrate
