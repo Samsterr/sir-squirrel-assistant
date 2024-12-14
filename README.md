@@ -23,6 +23,8 @@ There are already other auto mirror dungeon tools out there so why should you us
     * Sir Squirrel now works regardless of resolution
 * E.G.O Usage
     * Sir Squirrel now uses E.G.O in battle for unfavorable clashes
+* E.G.O Gift Fusion
+    * Sir Squirrel will fuse other E.G.O types to get better gifts.
 
 # Planned Features
 These are features i intend to add when i have time for Sir Squirrel development
