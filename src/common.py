@@ -149,11 +149,12 @@ def proximity_check(list1, list2, threshold):
                 close_pairs.add(coord1)
     return close_pairs
 
-def proximity_check_fuse(list1, list2, threshold):
+def proximity_check_fuse(list1, list2, x_threshold ,threshold):
     close_pairs = set()  # To store pairs of coordinates meeting the criteria
     for coord1 in list1:
         for coord2 in list2:
-            if coord1[0] == coord2[0]:  # Check if x values are the same
+            x_difference = abs(coord1[0] - coord2[0])
+            if x_difference < x_threshold:  # Check if x values are the same
                 y_difference = abs(coord1[1] - coord2[1])
                 if y_difference < threshold:  # Check if y difference is within the threshold
                     close_pairs.add(coord1)
@@ -270,6 +271,116 @@ def non_max_suppression_fast(boxes, overlapThresh=0.5):
     # Return only the bounding boxes that were picked
     return boxes[pick].astype("int")
 
+def node_detect(threshold = 0.5):
+    # Load the input image and the box template\
+    screenshot = capture_screen()
+    screenshot_height, screenshot_width = screenshot.shape[:2]
+
+    # Calculate scale factor
+    scale_factor_x = screenshot_width / 2560
+    scale_factor_y = screenshot_height / 1440
+    scale_factor = min(scale_factor_x,scale_factor_y)
+
+    #Resize Image
+    template = cv2.imread('pictures/mirror/general/battle_nodes.png', cv2.IMREAD_COLOR)  # Box template
+    template = cv2.resize(template, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
+    template_height, template_width = template.shape[:2]
+    # Convert both images to grayscale
+    gray_image = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+    gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+    # Use Canny edge detection to focus only on the edges (ignoring internal icons)
+    edges_image = cv2.Canny(gray_image, 100, 200)
+    edges_template = cv2.Canny(gray_template, 100, 200)
+
+    # Perform template matching on the edges
+    result = cv2.matchTemplate(edges_image, edges_template, cv2.TM_CCOEFF_NORMED)
+#
+    if scale_factor < 0.75:
+        threshold = threshold-0.05 #Testing for detecting on lower scales
+    locations = np.where(result >= threshold)
+    boxes = []
+    
+    for pt in zip(*locations[::-1]):  # Switch columns and rows
+        top_left = pt
+        bottom_right = (top_left[0] + template_width, top_left[1] + template_height)
+        boxes.append([top_left[0], top_left[1], bottom_right[0], bottom_right[1]])
+
+    boxes = np.array(boxes)
+
+    # Apply non-maximum suppression to remove overlapping boxes
+    filtered_boxes = non_max_suppression_fast(boxes)
+
+    # List to hold the center coordinates of all filtered elements
+    found_elements = []
+    
+    # Save a screenshot of each matched region
+    for match_index, (x1, y1, x2, y2) in enumerate(filtered_boxes):
+        center_x = (x1 + x2) // 2
+        center_y = (y1 + y2) // 2
+        found_elements.append((center_x, center_y))
+    
+    if found_elements:
+        #save_match_screenshot(screenshot, (x1, y1), (x2, y2), template_path, match_index)
+        return sorted(found_elements)
+    # Return the list of center coordinates of all found elements or None if no elements found
+    return []
+
+def debug_node_detect(threshold = 0.5):
+    # Load the input image and the box template\
+    screenshot = capture_screen()
+    screenshot_height, screenshot_width = screenshot.shape[:2]
+
+    # Calculate scale factor
+    scale_factor_x = screenshot_width / 2560
+    scale_factor_y = screenshot_height / 1440
+    scale_factor = min(scale_factor_x,scale_factor_y)
+
+    #Resize Image
+    template = cv2.imread('pictures/mirror/general/battle_nodes.png', cv2.IMREAD_COLOR)  # Box template
+    template = cv2.resize(template, None, fx=scale_factor, fy=scale_factor, interpolation=cv2.INTER_LINEAR)
+    template_height, template_width = template.shape[:2]
+    # Convert both images to grayscale
+    gray_image = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
+    gray_template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+    # Use Canny edge detection to focus only on the edges (ignoring internal icons)
+    edges_image = cv2.Canny(gray_image, 100, 200)
+    edges_template = cv2.Canny(gray_template, 100, 200)
+
+    # Perform template matching on the edges
+    result = cv2.matchTemplate(edges_image, edges_template, cv2.TM_CCOEFF_NORMED)
+#
+    if scale_factor < 0.75:
+        threshold = threshold-0.05 #Testing for detecting on lower scales
+    locations = np.where(result >= threshold)
+    boxes = []
+    
+    for pt in zip(*locations[::-1]):  # Switch columns and rows
+        top_left = pt
+        bottom_right = (top_left[0] + template_width, top_left[1] + template_height)
+        boxes.append([top_left[0], top_left[1], bottom_right[0], bottom_right[1]])
+
+    boxes = np.array(boxes)
+
+    # Apply non-maximum suppression to remove overlapping boxes
+    filtered_boxes = non_max_suppression_fast(boxes)
+
+    # List to hold the center coordinates of all filtered elements
+    found_elements = []
+    
+    # Save a screenshot of each matched region
+    for match_index, (x1, y1, x2, y2) in enumerate(filtered_boxes):
+        center_x = (x1 + x2) // 2
+        center_y = (y1 + y2) // 2
+        found_elements.append((center_x, center_y))
+        cv2.rectangle(screenshot, (x1, y1), (x2, y2), color=(0, 255, 0), thickness=2)
+
+    # Show the screenshot with rectangles for immediate feedback
+    cv2.imshow("Matches", screenshot)
+    cv2.waitKey(0)  # Wait for a key press to close the window
+    cv2.destroyAllWindows()
+
 def get_aspect_ratio():
     width,height = pyautogui.size()
     if (width / 4) * 3 == height:
@@ -299,7 +410,7 @@ def uniform_scale_single(coord):
     return round(scale_factor * coord)
 
 def uniform_scale_coordinates(x, y):
-    """Scale (x, y) coordinates from 1080p to the current screen resolution."""
+    """Scale (x, y) coordinates from 1440P to the current screen resolution."""
     width,height = get_resolution()
     scale_factor_x = width / 2560
     scale_factor_y = height / 1440

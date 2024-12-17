@@ -377,7 +377,6 @@ class Mirror:
     def navigation(self):
         """Core navigation function to reach the end of floor"""
         self.logger.info("Navigating")
-        node_y = [607,189,1036,820,396]
         #Checks incase continuing quitted out MD
         common.click_matching("pictures/mirror/general/danteh.png")
         if common.element_exist("pictures/mirror/general/nav_enter.png"):
@@ -385,15 +384,31 @@ class Mirror:
             #common.key_press("enter")
         else:
         #Find which node is the traversable one
-            for i in node_y:
+            node_location = []
+            node_y = [607,189,1036,820,396]
+            for y in node_y:
                 if self.aspect_ratio == "4:3":
-                    common.mouse_move_click(common.uniform_scale_single(1444),common.uniform_scale_single(i) + common.uniform_scale_coordinates(105))
+                    node_location.append((common.uniform_scale_single(1440),common.uniform_scale_single(y) + common.uniform_scale_single(105)))
                 else:
-                    common.mouse_move_click(common.uniform_scale_single(1444),common.uniform_scale_single(i))
+                    node_location.append((common.uniform_scale_single(1440),common.uniform_scale_single(y)))
+
+            combat_nodes = common.node_detect()
+            self.logger.debug(combat_nodes) #Combat detected nodes
+            combat_nodes = [x for x in combat_nodes if x[0] > common.scale_x(1280) and x[0] < common.scale_x(1601)]
+            self.logger.debug(combat_nodes) #filter only for next nodes
+            combat_nodes_locs = common.proximity_check_fuse(node_location, combat_nodes,100, 100)
+            self.logger.debug(combat_nodes_locs)
+            node_location = [i for i in node_location if i not in list(combat_nodes_locs)]
+            self.logger.debug(node_location)
+            node_location = node_location + list(combat_nodes_locs)
+            self.logger.debug(node_location)
+
+            for x,y in node_location:
+                common.mouse_move_click(x,y)
                 common.sleep(1)
                 if common.element_exist("pictures/mirror/general/nav_enter.png"):
-                    common.click_matching("pictures/mirror/general/nav_enter.png")
-                    #common.key_press("enter")
+                    #common.click_matching("pictures/mirror/general/nav_enter.png")
+                    common.key_press("enter")
                     break
 
     def sell_gifts(self):
@@ -457,6 +472,8 @@ class Mirror:
 
         while(True):
             fusion_gifts = self.find_gifts(statuses)
+            self.logger.debug("Initial Gifts")
+            self.logger.debug(fusion_gifts)
             if len(fusion_gifts) >= 3:
                 self.logger.debug("FUSION: Found 3 Gifts to fuse")
                 click_count = 0
@@ -481,11 +498,16 @@ class Mirror:
                     common.mouse_scroll(-1000)
                 common.sleep(0.5)
                 fusion_gifts_scroll = self.find_gifts(statuses)
+                self.logger.debug("Scrolled Gifts")
+                self.logger.debug(fusion_gifts_scroll)
                 self.logger.debug("Fusion: Checking for Duplicated Gifts after scrolling")
-                duplicates = common.proximity_check_fuse(fusion_gifts_scroll,fusion_gifts,common.scale_y(164))
+                duplicates = common.proximity_check_fuse(fusion_gifts_scroll,fusion_gifts,10,common.scale_y(164))
+                self.logger.debug("Duplicate Gifts")
+                self.logger.debug(duplicates)
                 for i in duplicates:
                     fusion_gifts_scroll.remove(i)
                     self.logger.debug("Fusion: Removing Duplicates")
+                self.logger.debug(fusion_gifts_scroll)
                 if (len(fusion_gifts_scroll) + click_count) >= 3:
                     self.logger.debug("FUSION: Found 3 Gifts to fuse after scrolling")
                     for x,y in fusion_gifts_scroll:
