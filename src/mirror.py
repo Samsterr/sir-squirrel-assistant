@@ -501,7 +501,7 @@ class Mirror:
                 self.logger.debug("Scrolled Gifts")
                 self.logger.debug(fusion_gifts_scroll)
                 self.logger.debug("Fusion: Checking for Duplicated Gifts after scrolling")
-                duplicates = common.proximity_check_fuse(fusion_gifts_scroll,fusion_gifts,10,common.scale_y(164))
+                duplicates = common.proximity_check_fuse(fusion_gifts_scroll,fusion_gifts,10,common.scale_y(174))
                 self.logger.debug("Duplicate Gifts")
                 self.logger.debug(duplicates)
                 for i in duplicates:
