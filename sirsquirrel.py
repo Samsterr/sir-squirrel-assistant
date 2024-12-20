@@ -3,7 +3,9 @@ import logging
 import os
 import threading
 import keyboard  # Import the keyboard module
-from src import core, mirror,common
+from src import mirror
+from src.core import pre_md_setup
+from src.common import error_screenshot
 
 with open("config/status_selection.txt", "r") as f:
     status = [i.strip().lower() for i in f.readlines()]
@@ -32,7 +34,7 @@ def mirror_dungeon_run(num_runs, logger):
         logger.info("Starting Run")
         for i in range(num_runs):
             logger.info("Run {}".format(run_count + 1))
-            core.pre_md_setup()
+            pre_md_setup()
             logger.info("Current Team: "+status_list[i])
             run_complete = 0
             MD = mirror.Mirror(status_list[i])
@@ -46,7 +48,7 @@ def mirror_dungeon_run(num_runs, logger):
             run_count += 1
         logger.info('Won Runs {}, Lost Runs {}'.format(win_count, lose_count))
     except Exception as e:
-        common.error_screenshot()
+        error_screenshot()
         logger.exception(e)
 
 def main():
