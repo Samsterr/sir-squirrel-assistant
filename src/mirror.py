@@ -94,6 +94,7 @@ class Mirror:
             self.logger.info("Entered ? node")
             common.mouse_move(200,200)
             common.click_skip(4)
+            self.event_choice()
 
         if common.element_exist("pictures/general/maint.png"): #maintainance prompt
             common.click_matching("pictures/general/close.png")
@@ -106,10 +107,10 @@ class Mirror:
         if common.element_exist("pictures/general/server_error.png"): #network connectivity issues
             reconnect()
 
-        if common.element_exist("pictures/mirror/general/event.png"): #Events handling
-            self.event_choice()
+        #if common.element_exist("pictures/mirror/general/event.png"): #Events handling
+        #    self.event_choice()
 
-        elif common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
+        if common.element_exist("pictures/mirror/general/danteh.png"): #checks if currently navigating
             self.navigation()
 
         elif common.element_exist("pictures/mirror/restshop/shop.png"): #new combined shop and rest stop
@@ -243,19 +244,19 @@ class Mirror:
             common.click_matching("pictures/mirror/general/refresh.png")
             common.mouse_move(200,200)
             return self.pack_selection()
+        
+        #elif common.element_exist(status) and self.exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
+        #    self.logger.debug("PACKS: pack exclusion detected, status detected, refreshing")
+        #    common.click_matching("pictures/mirror/general/refresh.png")
+        #    return self.pack_selection()
 
-        if self.exclusion_detection(floor) and refresh_flag: #if pack exclusion detected and refreshed
-            self.logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
-            return self.pack_list(floor)
-
-        if common.element_exist(status) and not self.exclusion_detection(floor) and floor != "f5": #if pack exclusion absent and status exists and not Floor 5
+        elif common.element_exist(status) and not self.exclusion_detection(floor) and floor != "f5": #if pack exclusion absent and status exists and not Floor 5
             self.logger.debug("pack exclusion not detected, status detected, choosing from status")
             return self.choose_pack(status)
-
-        if common.element_exist(status) and self.exclusion_detection(floor) and not refresh_flag: #if pack detected and status detected and not refreshed
-            self.logger.debug("PACKS: pack exclusion detected, status detected, refreshing")
-            common.click_matching("pictures/mirror/general/refresh.png")
-            return self.pack_selection()
+        
+        elif self.exclusion_detection(floor) and refresh_flag: #if pack exclusion detected and refreshed
+            self.logger.debug("PACKS: pack exclusion detected and refreshed, choosing from pack")
+            return self.pack_list(floor)
 
         self.logger.debug("PACKS: using pack list")
         return self.pack_list(floor)
@@ -407,8 +408,8 @@ class Mirror:
                 common.mouse_move_click(x,y)
                 common.sleep(1)
                 if common.element_exist("pictures/mirror/general/nav_enter.png"):
-                    #common.click_matching("pictures/mirror/general/nav_enter.png")
-                    common.key_press("enter")
+                    common.click_matching("pictures/mirror/general/nav_enter.png")
+                    #common.key_press("enter")
                     break
 
     def sell_gifts(self):
